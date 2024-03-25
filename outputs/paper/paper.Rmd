@@ -1,16 +1,11 @@
 ---
-title: Analyzing difficulty of Wordle using linguistic characteristics to determine
-  average success of Twitter players
-author: "Ivan Li"
+title: 
+subtitle: 
+author: "Ziheng Zhong"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output: pdf_document
-abstract: Using the Twitter API, data was gathered recording the public scores of
-  Wordle players over one month. The frequency of each daily score was obtained and
-  analyzed based on level of success, geographical location, and linguistic properties
-  of the word. It was found that the linguistic properties of words such as commonality
-  have impacts on player success. These results may have significance in literary
-  and linguistic analysis.
-thanks: 'Code and data are available at: https://github.com/Ivannoar/Twilight.'
+abstract: TBD
+thanks: 'Code and data are available at: https://github.com/iJustinn/House_Price.git'
 toc: no
 bibliography: references.bib
 always_allow_html: yes
@@ -30,6 +25,7 @@ library(knitr)
 library(tinytex)
 library(haven)
 library(ggplot2)
+
 masterdata <- read_csv("masterdata.csv")
 masterdata_clean <- read.csv("masterdata_clean.csv")
 

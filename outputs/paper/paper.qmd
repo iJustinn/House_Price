@@ -1,0 +1,202 @@
+---
+title: ""
+subtitle: ""
+author: 
+  - Ziheng Zhong
+thanks: "Code and data are available at: https://github.com/iJustinn/House_Price.git"
+date: today
+date-format: long
+abstract: ""
+format: pdf
+toc: true
+toc-depth: 3
+number-sections: true
+bibliography: references.bib
+---
+
+```{r}
+#| message: false
+#| echo: false
+
+# load packages
+packages <- c("tidyverse", "boot", "broom.mixed", "collapse", "dataverse", "gutenbergr", "janitor", "knitr", "marginaleffects", "modelsummary", "rstanarm", "tidybayes", "loo")
+
+# Function to check and install missing packages
+install_and_load <- function(packages) {
+  for (package in packages) {
+    if (!require(package, character.only = TRUE)) {
+      install.packages(package)
+      library(package, character.only = TRUE)
+    }
+  }
+}
+
+# Call the function with the list of packages
+install_and_load(packages)
+```
+
+```{r}
+#| message: false
+#| echo: false
+
+# read in data
+file_path_0 <- "../../inputs/data/raw_data.csv"
+file_path_1 <- "../../outputs/data/cleaned_data.csv"
+file_path_2 <- "../../outputs/data/top_5_cause_data.csv"
+file_path_3 <- "../../outputs/data/summarized_top_5_cause_data.csv"
+
+raw_data <- read_csv(file_path_0, show_col_types = FALSE)
+cleaned_data <- read_csv(file_path_1, show_col_types = FALSE)
+top_5_cause_data <- read_csv(file_path_2, show_col_types = FALSE)
+summarized_top_5_cause_data <- read_csv(file_path_3, show_col_types = FALSE)
+```
+
+# Introduction
+
+
+
+# Data {#sec-data}
+
+Data used in this paper was cleaned, processed and tested with the programming language R [@citeR]. Also with support of additional packages in R: `tidyverse` [@citeTidyverse], `ggplot2` [@citeGgplot], `janitor` [@citeJanitor], `readr` [@citeReadr], `knitr` [@citeKnitr], `rstanarm` [@citeRstanarm], `modelsummary` [@citeModelsummary], `tidybayes` [@citeTidybayes], `loo` [@citeLoo], `testthat` [@citeTestthat].
+
+## Source
+
+
+
+## Method
+
+```{r}
+#| message: false
+#| echo: false
+#| warning: false
+#| fig-pos: 'h'
+#| label: tbl-causes
+#| tbl-cap: top 8 major causes in 2019
+
+
+
+```
+
+
+
+# Results {#sec-res}
+
+```{r}
+#| include: false
+
+
+
+```
+
+## Data Trend
+
+```{r}
+#| message: false
+#| echo: false
+#| warning: false
+#| fig-pos: 'h'
+#| label: fig-trends-1
+#| fig-cap: Trend for Alberta Mortality-Top 5 Causes
+
+
+
+```
+
+```{r}
+#| message: false
+#| echo: false
+#| warning: false
+#| fig-pos: 'h'
+#| label: fig-trends-2
+#| fig-cap: Trend for Alberta Mortality-Sum of Causes
+
+
+
+```
+
+
+
+## Modeling
+
+```{r}
+#| message: false
+#| echo: false
+#| warning: false
+#| fig-pos: 'h'
+#| label: tbl-summary
+#| tbl-cap: summary of modeling
+
+
+
+```
+
+
+
+```{r}
+#| message: false
+#| echo: false
+#| warning: false
+#| fig-pos: 'h'
+#| label: fig-models
+#| fig-cap: Model Results
+#| fig-subcap: ["Poisson Model","Negative Binomial Model"]
+#| layout-ncol: 2
+#| layout-nrow: 1
+
+
+
+```
+
+
+
+```{r}
+#| message: false
+#| echo: false
+#| warning: false
+#| fig-pos: 'h'
+#| label: tbl-cross_validation
+#| tbl-cap: cross validation of modeling
+
+
+
+```
+
+# Discussion {#sec-dis}
+
+
+
+## Demographic Shifts
+
+
+
+## Health-related Behaviors
+
+
+
+## Government Policies
+
+
+
+## Environmental Changes
+
+
+
+## Possible Improvements
+
+
+
+# Conclusion {#sec-con}
+
+
+
+\newpage
+
+
+
+
+\newpage
+
+
+# References
+
+
