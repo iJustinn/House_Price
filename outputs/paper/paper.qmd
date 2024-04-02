@@ -1,12 +1,12 @@
 ---
-title: ""
-subtitle: ""
+title: "TBD"
+subtitle: "TBD"
 author: 
   - Ziheng Zhong
 thanks: "Code and data are available at: https://github.com/iJustinn/House_Price.git"
 date: today
 date-format: long
-abstract: ""
+abstract: "TBD"
 format: pdf
 toc: true
 toc-depth: 3
@@ -42,11 +42,12 @@ install_and_load(packages)
 # read in data
 file_path_0 <- "../../inputs/data/cali_house_price.csv"
 file_path_1 <- "../../outputs/data/cali_house_price_clean.csv"
-file_path_2 <- "../../outputs/data/.csv"
+file_path_2 <- "../../outputs/data/ocean_proximity_frequency.csv"
 file_path_3 <- "../../outputs/data/.csv"
 
 cali_house_price <- read_csv(file_path_0, show_col_types = FALSE)
 cali_house_price_clean<- read_csv(file_path_1, show_col_types = FALSE)
+ocean_proximity_frequency<- read_csv(file_path_2, show_col_types = FALSE)
 
 ```
 
@@ -114,6 +115,7 @@ kable(null_values)
 ```
 
 
+
 ```{r}
 #| message: false
 #| echo: false
@@ -147,10 +149,16 @@ kable(null_values)
 #| echo: false
 #| warning: false
 #| fig-pos: 'h'
-#| label: fig-trends-1
-#| fig-cap: Trend for Alberta Mortality-Top 5 Causes
+#| label: fig-ocean_proximity_frequency
+#| fig-cap: Frequency of Ocean Proximity
 
-
+ggplot(ocean_proximity_frequency, aes(x = Variable, y = Frequency)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Frequency of Categories in Ocean Proximity",
+       x = "Ocean Proximity",
+       y = "Frequency") +
+  coord_flip()
 
 ```
 
@@ -159,8 +167,8 @@ kable(null_values)
 #| echo: false
 #| warning: false
 #| fig-pos: 'h'
-#| label: fig-trends-2
-#| fig-cap: Trend for Alberta Mortality-Sum of Causes
+#| label: fig-TBD_1
+#| fig-cap: TBD
 
 
 
@@ -175,8 +183,8 @@ kable(null_values)
 #| echo: false
 #| warning: false
 #| fig-pos: 'h'
-#| label: tbl-summary
-#| tbl-cap: summary of modeling
+#| label: tbl-TBD_2
+#| tbl-cap: TBD
 
 
 
@@ -189,11 +197,8 @@ kable(null_values)
 #| echo: false
 #| warning: false
 #| fig-pos: 'h'
-#| label: fig-models
-#| fig-cap: Model Results
-#| fig-subcap: ["Poisson Model","Negative Binomial Model"]
-#| layout-ncol: 2
-#| layout-nrow: 1
+#| label: fig-TBD_3
+#| fig-cap: TBD
 
 
 
@@ -206,8 +211,8 @@ kable(null_values)
 #| echo: false
 #| warning: false
 #| fig-pos: 'h'
-#| label: tbl-cross_validation
-#| tbl-cap: cross validation of modeling
+#| label: tbl-TBD_4
+#| tbl-cap: TBD
 
 
 
