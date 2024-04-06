@@ -170,6 +170,35 @@ ggplot(ocean_proximity_frequency, aes(x = Variable, y = Frequency)) +
 #| label: fig-TBD_1
 #| fig-cap: TBD
 
+library(maps)
+library(dplyr)
+library(readr)
+library(viridis)
+library(ggplot2)
+
+
+# Generating fake data for average house prices for each US state
+set.seed(42) # For reproducibility
+states <- map_data("state")$region %>% unique()
+average_house_prices <- runif(n = length(states), min = 100000, max = 700000)
+state_average_prices <- data.frame(State = states, AverageHousePrice = average_house_prices)
+
+# Getting map data
+us_states_map <- map_data("state")
+
+# Merging the map data with the fake average house prices
+map_data_merged <- merge(us_states_map, state_average_prices, by.x = "region", by.y = "State")
+
+# Creating the heatmap
+ggplot() +
+  geom_polygon(data = map_data_merged, aes(x = long, y = lat, group = group, fill = AverageHousePrice), color = "white") +
+  coord_fixed(1.3) +
+  viridis::scale_fill_viridis(name = "Avg House Price", option = "plasma") +
+  theme_minimal() +
+  labs(title = "Average House Price by State in the US (Fake Data)",
+       subtitle = "Data: Generated",
+       caption = "Visualization by Example") +
+  theme(legend.position = "right")
 
 
 ```
