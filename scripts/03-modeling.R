@@ -17,6 +17,6 @@ top_5_cause_data <- read_csv("outputs/data/top_5_cause_data.csv")
 
 
 
-#### poisson model ####
+#### xxx model ####
 
 
