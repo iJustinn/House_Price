@@ -178,7 +178,7 @@ library(ggplot2)
 
 
 # Generating fake data for average house prices for each US state
-set.seed(42) # For reproducibility
+set.seed(123) # For reproducibility
 states <- map_data("state")$region %>% unique()
 average_house_prices <- runif(n = length(states), min = 100000, max = 700000)
 state_average_prices <- data.frame(State = states, AverageHousePrice = average_house_prices)
