@@ -40,14 +40,20 @@ install_and_load(packages)
 #| echo: false
 
 # read in data
-file_path_0 <- "../../inputs/data/cali_house_price.csv"
-file_path_1 <- "../../outputs/data/cali_house_price_clean.csv"
-file_path_2 <- "../../outputs/data/ocean_proximity_frequency.csv"
-file_path_3 <- "../../outputs/data/.csv"
+state_house_price_by_year <- read_csv("outputs/data/state_house_price_by_year.csv")
+state_house_price_by_month <- read_csv("outputs/data/state_house_price_by_month.csv")
 
-cali_house_price <- read_csv(file_path_0, show_col_types = FALSE)
-cali_house_price_clean<- read_csv(file_path_1, show_col_types = FALSE)
-ocean_proximity_frequency<- read_csv(file_path_2, show_col_types = FALSE)
+state_1b_house_price_by_year <- read_csv("outputs/data/state_1b_house_price_by_year.csv")
+state_2b_house_price_by_year <- read_csv("outputs/data/state_2b_house_price_by_year.csv")
+state_3b_house_price_by_year <- read_csv("outputs/data/state_3b_house_price_by_year.csv")
+state_4b_house_price_by_year <- read_csv("outputs/data/state_4b_house_price_by_year.csv")
+state_5bplus_house_price_by_year <- read_csv("outputs/data/state_5bplus_house_price_by_year.csv")
+
+state_1b_house_price_by_month <- read_csv("outputs/data/state_1b_house_price_by_month.csv")
+state_2b_house_price_by_month <- read_csv("outputs/data/state_2b_house_price_by_month.csv")
+state_3b_house_price_by_month <- read_csv("outputs/data/state_3b_house_price_by_month.csv")
+state_4b_house_price_by_month <- read_csv("outputs/data/state_4b_house_price_by_month.csv")
+state_5bplus_house_price_by_month <- read_csv("outputs/data/state_5bplus_house_price_by_month.csv")
 
 ```
 
@@ -75,25 +81,7 @@ Data used in this paper was cleaned, processed and tested with the programming l
 #| layout-ncol: 3
 #| layout-nrow: 3
 
-longitude_summary <- summary(cali_house_price %>% select(longitude))
-latitude_summary <- summary(cali_house_price %>% select(latitude))
-housing_median_age_summary <- summary(cali_house_price %>% select(housing_median_age))
-total_rooms_summary <- summary(cali_house_price %>% select(total_rooms))
-total_bedrooms_summary <- summary(cali_house_price %>% select(total_bedrooms))
-population_summary <- summary(cali_house_price %>% select(population))
-households_summary <- summary(cali_house_price %>% select(households))
-median_income_summary <- summary(cali_house_price %>% select(median_income))
-median_house_value_summary <- summary(cali_house_price %>% select(median_house_value))
 
-kable(longitude_summary)
-kable(latitude_summary)
-kable(housing_median_age_summary)
-kable(total_rooms_summary)
-kable(total_bedrooms_summary)
-kable(population_summary)
-kable(households_summary)
-kable(median_income_summary)
-kable(median_house_value_summary)
 
 ```
 
@@ -107,11 +95,8 @@ kable(median_house_value_summary)
 #| label: tbl-null-raw
 #| tbl-cap: Count of missing values for each variable
 
-null_values <- cali_house_price %>%
-  summarise_all(~sum(is.na(.))) %>%
-  gather(key = "Variables", value = "MissingValues")
 
-kable(null_values)
+
 ```
 
 
@@ -124,11 +109,8 @@ kable(null_values)
 #| label: tbl-null-clean
 #| tbl-cap: Count of missing values for each variable after cleaning
 
-null_values <- cali_house_price_clean %>%
-  summarise_all(~sum(is.na(.))) %>%
-  gather(key = "Variables", value = "MissingValues")
 
-kable(null_values)
+
 ```
 
 
@@ -152,13 +134,7 @@ kable(null_values)
 #| label: fig-ocean_proximity_frequency
 #| fig-cap: Frequency of Ocean Proximity
 
-ggplot(ocean_proximity_frequency, aes(x = Variable, y = Frequency)) +
-  geom_bar(stat = "identity") +
-  theme_minimal() +
-  labs(title = "Frequency of Categories in Ocean Proximity",
-       x = "Ocean Proximity",
-       y = "Frequency") +
-  coord_flip()
+
 
 ```
 
@@ -176,29 +152,6 @@ library(readr)
 library(viridis)
 library(ggplot2)
 
-
-# Generating fake data for average house prices for each US state
-set.seed(123) # For reproducibility
-states <- map_data("state")$region %>% unique()
-average_house_prices <- runif(n = length(states), min = 100000, max = 700000)
-state_average_prices <- data.frame(State = states, AverageHousePrice = average_house_prices)
-
-# Getting map data
-us_states_map <- map_data("state")
-
-# Merging the map data with the fake average house prices
-map_data_merged <- merge(us_states_map, state_average_prices, by.x = "region", by.y = "State")
-
-# Creating the heatmap
-ggplot() +
-  geom_polygon(data = map_data_merged, aes(x = long, y = lat, group = group, fill = AverageHousePrice), color = "white") +
-  coord_fixed(1.3) +
-  viridis::scale_fill_viridis(name = "Avg House Price", option = "plasma") +
-  theme_minimal() +
-  labs(title = "Average House Price by State in the US (Fake Data)",
-       subtitle = "Data: Generated",
-       caption = "Visualization by Example") +
-  theme(legend.position = "right")
 
 
 ```
