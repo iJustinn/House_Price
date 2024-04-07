@@ -9,54 +9,55 @@
 
 
 #### Workspace setup ####
-
-library(tidyverse)
 library(dplyr)
+library(tidyverse)
+library(lubridate)
 
 
 
 #### load data ####
-cali_house_price <- read_csv("inputs/data/cali_house_price.csv")
+raw_data <- read_csv("inputs/data/all_house_price.csv")
 
 
 
 #### Cleaning ####
-total_bedrooms_mean_value <- mean(cali_house_price$total_bedrooms, na.rm = TRUE) # Calculate the mean of the total_bedrooms column, excluding NA values
+clean_house_price <- raw_data %>% # Delete the first row since it cause issues in further analysis (we focus on state but the first row is data for U.S. as a whole)
+  slice(-1)
 
-cali_house_price_clean <- cali_house_price %>%
-  mutate(total_bedrooms = ifelse(is.na(total_bedrooms), total_bedrooms_mean_value, total_bedrooms)) # Replace NA values with the mean value in the total_bedrooms column
+clean_house_price <- clean_house_price %>% # Remove specific columns
+  select(-c(SizeRank, RegionID, RegionType, RegionName))
 
+#### Further Cleaning ####
+# By State - monthly
+state_house_price_by_month <- clean_house_price %>%
+  group_by(StateName) %>%
+  summarise(across(where(is.numeric), mean, na.rm = TRUE)) # Calculating means house price of each state excluding NA
 
-
-cali_house_price_clean %>% 
-  summarise(across(where(is.numeric), ~mean(.x, na.rm = TRUE))) %>% 
-  walk2(names(.), ~cat("The mean value of", .y, ":", .x, "\n")) # Calculating and printing mean of each numeric column
-
-
-
-columns_needed <- c("ocean_proximity") # Specify the needed columns
-
-ocean_proximity_frequency <- data.frame(Variable = character(), Frequency = integer()) # Initialize an empty data frame for storing frequencies
-
-for (j in columns_needed) {
-  temp <- as.data.frame(table(cali_house_price_clean[[j]]))  # Calculate frequency using table and convert to data frame
-  
-  colnames(temp) <- c("Variable", "Frequency")  # Rename the columns accordingly
-  
-  ocean_proximity_frequency <- bind_rows(ocean_proximity_frequency, temp)  # Combine with the main dataset
-}
-
-print(ocean_proximity_frequency) # Show the resulting dataset
+# By State - yearly
+state_house_price_by_year <- state_house_price_by_month %>%
+  pivot_longer( # Gather the monthly columns into key-value pairs, convert the keys to Dates, extract the year, and then calculate the mean
+    cols = starts_with("20"), # Assuming all your date columns start with '20'
+    names_to = "Month",
+    values_to = "HousePrice"
+  ) %>%
+  mutate(Year = year(ymd(Month))) %>%
+  group_by(StateName, Year) %>%
+  summarise(AvgHousePrice = mean(HousePrice, na.rm = TRUE), .groups = 'drop') # Calculating mean house price by year for each state
 
 
 
 #### save data ####
 write_csv(
-  x = cali_house_price_clean,
-  file = "outputs/data/cali_house_price_clean.csv"
+  x = clean_house_price,
+  file = "outputs/data/clean_house_price.csv"
 )
 
 write_csv(
-  x = ocean_proximity_frequency,
-  file = "outputs/data/ocean_proximity_frequency.csv"
+  x = state_house_price_by_month,
+  file = "outputs/data/state_house_price_by_month.csv"
+)
+
+write_csv(
+  x = state_house_price_by_year,
+  file = "outputs/data/state_house_price_by_year.csv"
 )
