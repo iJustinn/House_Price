@@ -16,7 +16,7 @@ library(lubridate)
 
 
 #### load data ####
-raw_data <- read_csv("inputs/data/all_house_price.csv")
+raw_data <- read_csv("../../inputs/data/all_house_price.csv")
 
 
 

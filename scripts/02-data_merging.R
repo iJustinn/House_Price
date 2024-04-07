@@ -16,43 +16,38 @@ library(lubridate)
 
 
 #### load data ####
-state_1b_house_price_by_year <- read_csv("outputs/data/state_1b_house_price_by_year.csv")
-state_2b_house_price_by_year <- read_csv("outputs/data/state_2b_house_price_by_year.csv")
-state_3b_house_price_by_year <- read_csv("outputs/data/state_3b_house_price_by_year.csv")
-state_4b_house_price_by_year <- read_csv("outputs/data/state_4b_house_price_by_year.csv")
-state_5bplus_house_price_by_year <- read_csv("outputs/data/state_5bplus_house_price_by_year.csv")
+state_1b_house_price_by_year <- read_csv("../../outputs/data/state_1b_house_price_by_year.csv")
+state_2b_house_price_by_year <- read_csv("../../outputs/data/state_2b_house_price_by_year.csv")
+state_3b_house_price_by_year <- read_csv("../../outputs/data/state_3b_house_price_by_year.csv")
+state_4b_house_price_by_year <- read_csv("../../outputs/data/state_4b_house_price_by_year.csv")
+state_5bplus_house_price_by_year <- read_csv("../../outputs/data/state_5bplus_house_price_by_year.csv")
 
 
 
 #### merge data ####
-state_1b_house_price_by_year <- state_1b_house_price_by_year %>% # Rename AvgHousePrice column in state_1b_house_price_by_year
-  rename(AvgHousePrice_1b = AvgHousePrice)
+# Change the column "StateName" to "NumBedroom" and set the value to 1 for all rows
+state_1b_house_price_by_year <- state_1b_house_price_by_year %>%
+  mutate(NumBedroom = 1) %>%
+  select(-StateName) # This removes the original StateName column
 
-merge_data <- left_join(state_1b_house_price_by_year, # Merge state_2b_house_price_by_year
-                            state_2b_house_price_by_year %>% 
-                              select(StateName, Year, AvgHousePrice) %>%
-                              rename(AvgHousePrice_2b = AvgHousePrice), 
-                            by = c("StateName", "Year"))
+state_2b_house_price_by_year <- state_2b_house_price_by_year %>%
+  mutate(NumBedroom = 2) %>%
+  select(-StateName) # This removes the original StateName column
 
-merge_data <- left_join(merge_data, # Merging state_3b_house_price_by_year
-                        state_3b_house_price_by_year %>%
-                          select(StateName, Year, AvgHousePrice) %>%
-                          rename(AvgHousePrice_3b = AvgHousePrice),
-                        by = c("StateName", "Year"))
+state_3b_house_price_by_year <- state_3b_house_price_by_year %>%
+  mutate(NumBedroom = 3) %>%
+  select(-StateName) # This removes the original StateName column
 
-merge_data <- left_join(merge_data, # Merging state_4b_house_price_by_year
-                        state_4b_house_price_by_year %>%
-                          select(StateName, Year, AvgHousePrice) %>%
-                          rename(AvgHousePrice_4b = AvgHousePrice),
-                        by = c("StateName", "Year"))
+state_4b_house_price_by_year <- state_4b_house_price_by_year %>%
+  mutate(NumBedroom = 4) %>%
+  select(-StateName) # This removes the original StateName column
 
-merge_data <- left_join(merge_data, # Merging state_5bplus_house_price_by_year
-                        state_5bplus_house_price_by_year %>%
-                          select(StateName, Year, AvgHousePrice) %>%
-                          rename(AvgHousePrice_5bplus = AvgHousePrice),
-                        by = c("StateName", "Year"))
+state_5bplus_house_price_by_year <- state_5bplus_house_price_by_year %>%
+  mutate(NumBedroom = 5) %>%
+  select(-StateName) # This removes the original StateName column
 
-
+merge_data <- bind_rows(state_1b_house_price_by_year, state_2b_house_price_by_year, state_3b_house_price_by_year, state_4b_house_price_by_year, state_5bplus_house_price_by_year)
+merge_data <- na.omit(merge_data)
 
 #### save data ####
 write_csv(
