@@ -40,20 +40,21 @@ install_and_load(packages)
 #| echo: false
 
 # read in data
-state_house_price_by_year <- read_csv("outputs/data/state_house_price_by_year.csv")
-state_house_price_by_month <- read_csv("outputs/data/state_house_price_by_month.csv")
+house_prices <- read_csv("../../outputs/data/merged_house_price.csv")
 
-state_1b_house_price_by_year <- read_csv("outputs/data/state_1b_house_price_by_year.csv")
-state_2b_house_price_by_year <- read_csv("outputs/data/state_2b_house_price_by_year.csv")
-state_3b_house_price_by_year <- read_csv("outputs/data/state_3b_house_price_by_year.csv")
-state_4b_house_price_by_year <- read_csv("outputs/data/state_4b_house_price_by_year.csv")
-state_5bplus_house_price_by_year <- read_csv("outputs/data/state_5bplus_house_price_by_year.csv")
+state_house_price_by_year <- read_csv("../../outputs/data/state_house_price_by_year.csv")
+state_1b_house_price_by_year <- read_csv("../../outputs/data/state_1b_house_price_by_year.csv")
+state_2b_house_price_by_year <- read_csv("../../outputs/data/state_2b_house_price_by_year.csv")
+state_3b_house_price_by_year <- read_csv("../../outputs/data/state_3b_house_price_by_year.csv")
+state_4b_house_price_by_year <- read_csv("../../outputs/data/state_4b_house_price_by_year.csv")
+state_5bplus_house_price_by_year <- read_csv("../../outputs/data/state_5bplus_house_price_by_year.csv")
 
-state_1b_house_price_by_month <- read_csv("outputs/data/state_1b_house_price_by_month.csv")
-state_2b_house_price_by_month <- read_csv("outputs/data/state_2b_house_price_by_month.csv")
-state_3b_house_price_by_month <- read_csv("outputs/data/state_3b_house_price_by_month.csv")
-state_4b_house_price_by_month <- read_csv("outputs/data/state_4b_house_price_by_month.csv")
-state_5bplus_house_price_by_month <- read_csv("outputs/data/state_5bplus_house_price_by_month.csv")
+state_house_price_by_month <- read_csv("../../outputs/data/state_house_price_by_month.csv")
+state_1b_house_price_by_month <- read_csv("../../outputs/data/state_1b_house_price_by_month.csv")
+state_2b_house_price_by_month <- read_csv("../../outputs/data/state_2b_house_price_by_month.csv")
+state_3b_house_price_by_month <- read_csv("../../outputs/data/state_3b_house_price_by_month.csv")
+state_4b_house_price_by_month <- read_csv("../../outputs/data/state_4b_house_price_by_month.csv")
+state_5bplus_house_price_by_month <- read_csv("../../outputs/data/state_5bplus_house_price_by_month.csv")
 
 ```
 
@@ -63,7 +64,7 @@ state_5bplus_house_price_by_month <- read_csv("outputs/data/state_5bplus_house_p
 
 # Data {#sec-data}
 
-Data used in this paper was cleaned, processed and tested with the programming language R [@citeR]. Also with support of additional packages in R: `tidyverse` [@citeTidyverse], `ggplot2` [@citeGgplot], `janitor` [@citeJanitor], `readr` [@citeReadr], `knitr` [@citeKnitr], `rstanarm` [@citeRstanarm], `modelsummary` [@citeModelsummary], `tidybayes` [@citeTidybayes], `loo` [@citeLoo], `testthat` [@citeTestthat], `KableExtra` [@citeKableEx].
+Data used in this paper was cleaned, processed and tested with the programming language R [@citeR]. Also with support of additional packages in R: `tidyverse` [@citeTidyverse], `ggplot2` [@citeGgplot], `janitor` [@citeJanitor], `readr` [@citeReadr], `knitr` [@citeKnitr], `modelsummary` [@citeModelsummary], `testthat` [@citeTestthat], `KableExtra` [@citeKableEx], `viridis` [@citeViridis], `lubridate` [@citeLubridate], `maps` [@citeMaps], `mgcv` [@citeMgcv].
 
 ## Source
 
@@ -230,6 +231,25 @@ library(ggplot2)
 
 \newpage
 
+\appendix
+
+# Appendix
+
+## Datasheet
+
+**Motivation**
+
+**Composition**
+
+**Collection process**
+
+**Preprocessing/cleaning/labeling**
+
+**Uses**
+
+**Distribution**
+
+**Maintenance**
 
 
 
