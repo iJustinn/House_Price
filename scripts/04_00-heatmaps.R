@@ -1,7 +1,7 @@
 #### Preamble ####
-# Purpose: 
+# Purpose: The code utilizes R libraries for data manipulation, visualization, and mapping to generate heat maps of average house prices by state in the US, categorized by the number of bedrooms, using datasets on yearly house prices.
 # Author: Ziheng Zhong
-# Date: 25 March 2024
+# Date: 02 April 2024
 # Contact: ziheng.zhong@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: none
@@ -17,6 +17,7 @@ library(tidyr)
 library(dplyr)
 library(ggplot2)
 library(viridis)
+library(lubridate)
 
 
 

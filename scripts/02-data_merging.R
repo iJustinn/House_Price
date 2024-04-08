@@ -1,7 +1,7 @@
 #### Preamble ####
-# Purpose: 
+# Purpose: The code merges yearly house price data for different types of houses based on the number of bedrooms from various datasets, normalizes their structure by adding a uniform 'NumBedroom' column while removing the 'StateName' column, omits any missing values, and then saves the merged and cleaned dataset to a new CSV file.
 # Author: Ziheng Zhong
-# Date: 25 March 2024
+# Date: 02 April 2024
 # Contact: ziheng.zhong@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: none

@@ -1,7 +1,7 @@
 #### Preamble ####
-# Purpose: The code defines a test suite for validating data integrity, including checks for positive calendar years, four-digit year format, non-empty cause entries, and non-negative death counts across multiple datasets within a research project.
+# Purpose: The code is designed for validating the integrity and constraints of house price data across various datasets using R's testing frameworks.
 # Author: Ziheng Zhong
-# Date: 25 March 2024
+# Date: 02 April 2024
 # Contact: ziheng.zhong@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: none
@@ -15,85 +15,234 @@ library(tidyverse)
 
 
 
-#### cali_house_price_clean testing ####
-test_that("cali_house_price_clean testing", {
-  cali_house_price_clean<- readr::read_csv("../../House_Price/outputs/data/cali_house_price_clean.csv")
+#### merged_house_price testing ####
+test_that("merged_house_price testing", {
+  merged_house_price<- readr::read_csv("../../House_Price/outputs/data/merged_house_price.csv")
   
-  # Test if 'longitude' values are within expected range
-  expect_true(all(cali_house_price_clean$longitude >= -180 & cali_house_price_clean$longitude <= 180), 
-              info = "Longitude values are within expected range")
+  # Test if 'Year' values are positive
+  expect_true(all(merged_house_price$Year > 0),
+              info = "Year values are positive")
   
-  # Test if 'latitude' values are within expected range
-  expect_true(all(cali_house_price_clean$latitude >= -90 & cali_house_price_clean$latitude <= 90),
-              info = "Latitude values are within expected range")
+  # Test if 'AvgHousePrice' values are positive
+  expect_true(all(merged_house_price$AvgHousePrice > 0),
+              info = "AvgHousePrice values are positive")
   
-  # Test if 'housing_median_age' values are positive
-  expect_true(all(cali_house_price_clean$housing_median_age > 0),
-              info = "Housing median age values are positive")
+  # Test if 'NumBedroom' values are positive
+  expect_true(all(merged_house_price$NumBedroom > 0),
+              info = "NumBedroom values are positive")
   
-  # Test if 'total_rooms' values are positive
-  expect_true(all(cali_house_price_clean$total_rooms > 0),
-              info = "Total rooms values are positive")
+  # Test if 'NumBedroom' values are within range
+  expect_true(all(merged_house_price$NumBedroom < 6),
+              info = "NumBedroom values are within range")
   
-  # Test if 'total_bedrooms' values are positive
-  expect_true(all(cali_house_price_clean$total_bedrooms > 0),
-              info = "Total bedrooms values are positive")
-  
-  # Test if 'population' values are positive
-  expect_true(all(cali_house_price_clean$population > 0),
-              info = "Population values are positive")
-  
-  # Test if 'households' values are positive
-  expect_true(all(cali_house_price_clean$households > 0),
-              info = "Households values are positive")
-  
-  # Test if 'median_income' values are positive
-  expect_true(all(cali_house_price_clean$median_income > 0),
-              info = "Median income values are positive")
-  
-  # Test if 'median_house_value' values are positive
-  expect_true(all(cali_house_price_clean$median_house_value > 0),
-              info = "Median house value values are positive")
-  
-  # Test if 'ocean_proximity' contains expected categories
-  expected_categories <- c("NEAR BAY", "ISLAND", "INLAND", "NEAR OCEAN", "<1H OCEAN")
-  expect_true(all(cali_house_price_clean$ocean_proximity %in% expected_categories),
-              info = "Ocean proximity contains specific categories")
 })
 
 
 
-#### ocean_proximity_frequency testing ####
-test_that("ocean_proximity_frequency testing", {
-  ocean_proximity_frequency<- readr::read_csv("../../House_Price/outputs/data/ocean_proximity_frequency.csv")
+#### overall data testing ####
+test_that("state_house_price_by_year testing", {
+  state_house_price_by_year <- readr::read_csv("../../House_Price/outputs/data/state_house_price_by_year.csv")
+  state_house_price_by_month <- readr::read_csv("../../House_Price/outputs/data/state_house_price_by_month.csv")
   
-  # Test that the dataset has the expected columns
-  expected_cols <- c("Variable", "Frequency")
-  expect_equal(colnames(ocean_proximity_frequency), expected_cols, 
-               info = "Dataset has the correct columns")
+  # Test if 'Year' values are positive
+  expect_true(all(state_house_price_by_year$Year > 0, na.rm = TRUE),
+              info = "Year values are positive")
   
-  # Test that the 'Variable' column contains specific expected categories
-  expected_categories <- c("NEAR BAY", "ISLAND", "INLAND", "NEAR OCEAN", "<1H OCEAN")
-  expect_true(all(ocean_proximity_frequency$Variable %in% expected_categories),
-              info = "Variable column contains all expected categories")
+  # Test if 'AvgHousePrice' values are positive
+  expect_true(all(state_house_price_by_year$AvgHousePrice > 0, na.rm = TRUE),
+              info = "AvgHousePrice values are positive")
   
-  # Test that the 'Frequency' column contains only positive integers
-  expect_true(all(ocean_proximity_frequency$Frequency > 0 & ocean_proximity_frequency$Frequency == floor(ocean_proximity_frequency$Frequency)),
-              info = "Frequency column contains only positive integers")
+  # Test if 'StateName' values are positive
+  test_that("StateName has 50 unique values", {
+    num_unique_states <- length(unique(state_house_price_by_year$StateName))
+    expect_equal(num_unique_states, 50, 
+                 info = "StateName has 50 unique values")
+  })
+  test_that("StateName has 50 unique values", {
+    num_unique_states <- length(unique(state_house_price_by_month$StateName))
+    expect_equal(num_unique_states, 50, 
+                 info = "StateName has 50 unique values")
+  })
   
-  # Test that the dataset does not contain any NA values
-  expect_true(!any(is.na(ocean_proximity_frequency)),
-              info = "Dataset contains no NA values")
+  # Test if total number of columns is correct
+  test_that("Correct total number of columns", {
+    expect_equal(ncol(state_house_price_by_month), 291, 
+                 info = "Correct total number of columns")
+  })
+  
 })
 
 
 
+#### 1b data testing ####
+test_that("state_1b_house_price_by_year testing", {
+  state_1b_house_price_by_year<- readr::read_csv("../../House_Price/outputs/data/state_1b_house_price_by_year.csv")
+  state_1b_house_price_by_month<- readr::read_csv("../../House_Price/outputs/data/state_1b_house_price_by_month.csv")
+  
+  # Test if 'Year' values are positive
+  expect_true(all(state_1b_house_price_by_year$Year > 0, na.rm = TRUE),
+              info = "Year values are positive")
+  
+  # Test if 'AvgHousePrice' values are positive
+  expect_true(all(state_1b_house_price_by_year$AvgHousePrice > 0, na.rm = TRUE),
+              info = "AvgHousePrice values are positive")
+  
+  # Test if 'StateName' values are positive
+  test_that("StateName has 50 unique values", {
+    num_unique_states <- length(unique(state_1b_house_price_by_year$StateName))
+    expect_equal(num_unique_states, 50, 
+                 info = "StateName has 50 unique values")
+  })
+  test_that("StateName has 50 unique values", {
+    num_unique_states <- length(unique(state_1b_house_price_by_month$StateName))
+    expect_equal(num_unique_states, 50, 
+                 info = "StateName has 50 unique values")
+  })
+  
+  # Test if total number of columns is correct
+  test_that("Correct total number of columns", {
+    expect_equal(ncol(state_1b_house_price_by_month), 291, 
+                 info = "Correct total number of columns")
+  })
+  
+})
 
 
 
+#### 2b data testing ####
+test_that("state_2b_house_price_by_year testing", {
+  state_2b_house_price_by_year<- readr::read_csv("../../House_Price/outputs/data/state_2b_house_price_by_year.csv")
+  state_2b_house_price_by_month<- readr::read_csv("../../House_Price/outputs/data/state_2b_house_price_by_month.csv")
+  
+  # Test if 'Year' values are positive
+  expect_true(all(state_2b_house_price_by_year$Year > 0, na.rm = TRUE),
+              info = "Year values are positive")
+  
+  # Test if 'AvgHousePrice' values are positive
+  expect_true(all(state_2b_house_price_by_year$AvgHousePrice > 0, na.rm = TRUE),
+              info = "AvgHousePrice values are positive")
+  
+  # Test if 'StateName' values are positive
+  test_that("StateName has 50 unique values", {
+    num_unique_states <- length(unique(state_2b_house_price_by_year$StateName))
+    expect_equal(num_unique_states, 50, 
+                 info = "StateName has 50 unique values")
+  })
+  test_that("StateName has 50 unique values", {
+    num_unique_states <- length(unique(state_2b_house_price_by_month$StateName))
+    expect_equal(num_unique_states, 50, 
+                 info = "StateName has 50 unique values")
+  })
+  
+  # Test if total number of columns is correct
+  test_that("Correct total number of columns", {
+    expect_equal(ncol(state_2b_house_price_by_month), 291, 
+                 info = "Correct total number of columns")
+  })
+  
+})
 
 
 
+#### 3b data testing ####
+test_that("state_3b_house_price_by_year testing", {
+  state_3b_house_price_by_year <- readr::read_csv("../../House_Price/outputs/data/state_3b_house_price_by_year.csv")
+  state_3b_house_price_by_month <- readr::read_csv("../../House_Price/outputs/data/state_3b_house_price_by_month.csv")
+  
+  # Test if 'Year' values are positive
+  expect_true(all(state_3b_house_price_by_year$Year > 0, na.rm = TRUE),
+              info = "Year values are positive")
+  
+  # Test if 'AvgHousePrice' values are positive
+  expect_true(all(state_3b_house_price_by_year$AvgHousePrice > 0, na.rm = TRUE),
+              info = "AvgHousePrice values are positive")
+  
+  # Test if 'StateName' values are positive
+  test_that("StateName has 50 unique values", {
+    num_unique_states <- length(unique(state_3b_house_price_by_year$StateName))
+    expect_equal(num_unique_states, 50, 
+                 info = "StateName has 50 unique values")
+  })
+  test_that("StateName has 50 unique values", {
+    num_unique_states <- length(unique(state_3b_house_price_by_month$StateName))
+    expect_equal(num_unique_states, 50, 
+                 info = "StateName has 50 unique values")
+  })
+  
+  # Test if total number of columns is correct
+  test_that("Correct total number of columns", {
+    expect_equal(ncol(state_3b_house_price_by_month), 291, 
+                 info = "Correct total number of columns")
+  })
+  
+})
 
 
 
+#### 4b data testing ####
+test_that("state_4b_house_price_by_year testing", {
+  state_4b_house_price_by_year <- readr::read_csv("../../House_Price/outputs/data/state_4b_house_price_by_year.csv")
+  state_4b_house_price_by_month <- readr::read_csv("../../House_Price/outputs/data/state_4b_house_price_by_month.csv")
+  
+  # Test if 'Year' values are positive
+  expect_true(all(state_4b_house_price_by_year$Year > 0, na.rm = TRUE),
+              info = "Year values are positive")
+  
+  # Test if 'AvgHousePrice' values are positive
+  expect_true(all(state_4b_house_price_by_year$AvgHousePrice > 0, na.rm = TRUE),
+              info = "AvgHousePrice values are positive")
+  
+  # Test if 'StateName' values are positive
+  test_that("StateName has 50 unique values", {
+    num_unique_states <- length(unique(state_4b_house_price_by_year$StateName))
+    expect_equal(num_unique_states, 50, 
+                 info = "StateName has 50 unique values")
+  })
+  test_that("StateName has 50 unique values", {
+    num_unique_states <- length(unique(state_4b_house_price_by_month$StateName))
+    expect_equal(num_unique_states, 50, 
+                 info = "StateName has 50 unique values")
+  })
+  
+  # Test if total number of columns is correct
+  test_that("Correct total number of columns", {
+    expect_equal(ncol(state_4b_house_price_by_month), 291, 
+                 info = "Correct total number of columns")
+  })
+  
+})
+
+
+
+#### 5b+ data testing ####
+test_that("state_5bplus_house_price_by_year testing", {
+  state_5bplus_house_price_by_year <- readr::read_csv("../../House_Price/outputs/data/state_5bplus_house_price_by_year.csv")
+  state_5bplus_house_price_by_month <- readr::read_csv("../../House_Price/outputs/data/state_5bplus_house_price_by_month.csv")
+  
+  # Test if 'Year' values are positive
+  expect_true(all(state_5bplus_house_price_by_year$Year > 0, na.rm = TRUE),
+              info = "Year values are positive")
+  
+  # Test if 'AvgHousePrice' values are positive
+  expect_true(all(state_5bplus_house_price_by_year$AvgHousePrice > 0, na.rm = TRUE),
+              info = "AvgHousePrice values are positive")
+  
+  # Test if 'StateName' values are positive
+  test_that("StateName has 50 unique values", {
+    num_unique_states <- length(unique(state_5bplus_house_price_by_year$StateName))
+    expect_equal(num_unique_states, 50, 
+                 info = "StateName has 50 unique values")
+  })
+  test_that("StateName has 50 unique values", {
+    num_unique_states <- length(unique(state_5bplus_house_price_by_month$StateName))
+    expect_equal(num_unique_states, 50, 
+                 info = "StateName has 50 unique values")
+  })
+  
+  # Test if total number of columns is correct
+  test_that("Correct total number of columns", {
+    expect_equal(ncol(state_5bplus_house_price_by_month), 291, 
+                 info = "Correct total number of columns")
+  })
+  
+})

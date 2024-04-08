@@ -1,7 +1,7 @@
 #### Preamble ####
-# Purpose: 
+# Purpose: This code is aimed at cleaning and restructuring a comprehensive dataset of house prices, focusing on aggregating the data by state both on a monthly and yearly basis, followed by saving these cleaned and aggregated datasets for further analysis or visualization.
 # Author: Ziheng Zhong
-# Date: 25 March 2024
+# Date: 02 April 2024
 # Contact: ziheng.zhong@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: none

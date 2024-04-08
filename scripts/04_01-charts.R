@@ -1,7 +1,7 @@
 #### Preamble ####
-# Purpose: 
+# Purpose: The code is designed to process and visualize trends in average house prices by month for different house types using R, integrating data manipulation and visualization libraries to prepare and plot the data.
 # Author: Ziheng Zhong
-# Date: 25 March 2024
+# Date: 02 April 2024
 # Contact: ziheng.zhong@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: none

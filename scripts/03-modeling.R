@@ -1,7 +1,7 @@
 #### Preamble ####
-# Purpose: 
+# Purpose: The code is designed to analyze house price data through multiple linear regression, polynomial regression, and generalized additive models (GAMs) in R, summarizing and visualizing the relationships between average house prices and features such as year and number of bedrooms.
 # Author: Ziheng Zhong
-# Date: 25 March 2024
+# Date: 02 April 2024
 # Contact: ziheng.zhong@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: none

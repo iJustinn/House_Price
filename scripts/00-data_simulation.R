@@ -1,7 +1,7 @@
 #### Preamble ####
-# Purpose: 
+# Purpose: This code simulates and visualizes average house prices across US states using R, combining randomly generated price data with geographical mapping to create a heat map representation of the prices by state.
 # Author: Ziheng Zhong
-# Date: 25 March 2024
+# Date: 02 April 2024
 # Contact: ziheng.zhong@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: none
