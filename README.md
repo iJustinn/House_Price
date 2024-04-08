@@ -1,6 +1,6 @@
 # House_Price
 
-This study is focusing on...
+This study is focusing on analyzing US house prices for around past 20 years, focusing on building models to fit and predict the future of this market. Not finished...
 
 ## Paper Overview
 
