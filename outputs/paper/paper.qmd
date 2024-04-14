@@ -6,7 +6,7 @@ author:
 thanks: "Code and data are available at: https://github.com/iJustinn/House_Price.git"
 date: today
 date-format: long
-abstract: "TBD"
+abstract: "This research explores the dynamics of the U.S. housing market. It provides a comprehensive analysis of price trends across different states and housing types, revealing significant escalations in recent years. The study elucidates how location, property characteristics, and external economic factors influence house prices."
 format: pdf
 toc: true
 toc-depth: 3
