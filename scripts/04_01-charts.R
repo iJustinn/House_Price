@@ -41,25 +41,24 @@ process_data <- function(data, label) { # Function to process each dataset
            Date = as.Date(Date))
 }
 
-data_list <- list( # Processing all datasets
-  one_bedroom = state_1b_house_price_by_month,
-  two_bedroom = state_2b_house_price_by_month,
-  three_bedroom = state_3b_house_price_by_month,
-  four_bedroom = state_4b_house_price_by_month,
-  five_plus_bedroom = state_5bplus_house_price_by_month
+data_list <- list(
+  `1B` = state_1b_house_price_by_month,
+  `2B` = state_2b_house_price_by_month,
+  `3B` = state_3b_house_price_by_month,
+  `4B` = state_4b_house_price_by_month,
+  `5B+` = state_5bplus_house_price_by_month
 )
 
 processed_data <- lapply(names(data_list), function(name) process_data(data_list[[name]], name))
 
-combined_data <- bind_rows(processed_data) # Combining all processed data into one dataframe
+combined_data <- bind_rows(processed_data)
 
-ggplot(combined_data, aes(x = Date, y = AverageHousePrice, color = Trend)) + # Plotting
+ggplot(combined_data, aes(x = Date, y = AverageHousePrice, color = Trend)) +
   geom_line() + 
-  labs(title = "Trend of Average House Price from 2000 to 2024 by House Type",
-       x = "Year", y = "Average House Price ($)") +
+  labs(x = "Year", y = "Average House Price ($)") +
   theme_minimal() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  scale_color_viridis_d(name = "House Type")
+  scale_color_viridis_d(name = "Number of Bedrooms")
 
 
 
@@ -70,8 +69,23 @@ state_all <- state_house_price_by_month %>% select(-StateName) %>%  # Processing
 
 state_all$Date <- as.Date(state_all$Date) # Convert Date from character to Date type
 
+extrema <- state_all %>%
+  mutate(is_peak = ifelse(lag(AverageHousePrice, 1, default = first(AverageHousePrice)) < AverageHousePrice & 
+                            lead(AverageHousePrice, 1, default = last(AverageHousePrice)) < AverageHousePrice,
+                          TRUE, FALSE),
+         is_trough = ifelse(lag(AverageHousePrice, 1, default = first(AverageHousePrice)) > AverageHousePrice & 
+                              lead(AverageHousePrice, 1, default = last(AverageHousePrice)) > AverageHousePrice,
+                            TRUE, FALSE)) %>%
+  filter(is_peak | is_trough) %>%
+  select(Date, AverageHousePrice, is_peak, is_trough)
+
+extrema <- extrema %>%
+  filter(format(Date, "%Y") %in% c("2007", "2012", "2022"))
+
 ggplot(state_all, aes(x = Date, y = AverageHousePrice)) + # Plotting
-  geom_line(color = "blue") + 
+  geom_line(color = "black") + 
+  geom_text(data = extrema, aes(label = format(Date, "%Y")), nudge_y = 10000, check_overlap = TRUE, color = "black") +
+  geom_vline(data = extrema, aes(xintercept = as.numeric(Date)), linetype = "dashed", color = "red") +
   labs(title = "Trend of Average House Price from 2000 to 2024",
        x = "Year", y = "Average House Price ($)") + 
   theme_minimal() + 
