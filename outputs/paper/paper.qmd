@@ -463,7 +463,33 @@ ggplot() + # Generating heat map
 
 ## Modeling
 
+### Model Setup
 
+The setup for the Multiple Regression model is straightforward, with direct relationships between the independent variables (Year and NumBedroom) and the dependent variable (house price). This model assumes that these relationships are linear and additive.
+
+$$
+TBD
+$$
+
+In contrast, the Polynomial Regression model requires a more intricate setup. It involves creating polynomial transformations of the independent variables to allow the model to fit non-linear trends. Specifically, the second-degree polynomial terms are created to model the curvature in the data, accounting for the possibility that the effect of time and the number of bedrooms on house prices changes at different rates. This setup acknowledges that increases in house prices may accelerate or decelerate over time and that the price premium for additional bedrooms may not be constant but could increase or decrease with the number of bedrooms.
+
+$$
+TBD
+$$
+
+The Generalized Additive Model (GAM) represents a flexible approach to modeling complex, non-linear relationships between the dependent and independent variables. The setup for the GAM model in this study involves specifying smooth functions of the predictors (likely year and number of bedrooms), allowing for the accommodation of non-linear trends that cannot be captured by traditional linear models. Unlike polynomial regression, which explicitly models non-linearity through polynomial terms, GAM uses smoothing functions that are fitted to the data in a non-parametric manner. This approach enables the model to adapt to the shape of the underlying trend without pre-specifying the form of the relationship, thus providing a tailored fit to the peculiarities in the data.
+
+$$
+TBD
+$$
+
+### Multiple Regression
+
+The Multiple Regression model reveals some intriguing insights about the housing market. It shows a substantial negative intercept, suggesting that starting from the model's baseline (which may be the earliest year in the data, though not directly interpretable), the house prices are initially low. The positive coefficient for 'Year' implies that there's a general trend of increasing house prices over time. Every passing year is associated with an increase in the average house price, as indicated by the coefficient of 6,958.769. Additionally, the 'NumBedroom' variable carries a positive coefficient of 59,897.327, which suggests that houses with more bedrooms tend to have higher prices. This model accounts for 44.5% of the variability in house prices (R-squared = 0.445), which is respectable but indicates that over half of the variance is explained by factors not included in the model.
+
+### Polynomial Regression
+
+Switching to the Polynomial Regression model, the positive intercept is considerably high, indicating that the baseline price for houses at the starting point of the model is substantial. The inclusion of polynomial terms for 'Year' and 'NumBedroom' indicates a non-linear relationship between these variables and house prices. The positive coefficients for the polynomial terms of 'Year' suggest an initial increase in prices, but as the magnitude of the coefficients for the quadratic terms is lower, this might indicate a slowing growth rate or a potential future downturn in prices. The coefficients for 'NumBedroom' follow a similar pattern, hinting that the increase in price associated with additional bedrooms becomes less pronounced as the number of bedrooms increases. This model fits the data slightly better than the Multiple Regression model, as evidenced by a higher R-squared value of 0.479. The lower AIC and BIC values suggest it is more efficient, and the reduced RMSE indicates improved prediction accuracy.
 
 ```{r}
 #| message: false
@@ -482,7 +508,13 @@ modelsummary(
 
 ```
 
+### Generalized Additive Model (GAM)
 
+The results of the GAM model as shown in Table 6 indicate a significant positive intercept, similar to the polynomial regression model, suggesting a high base price for the houses at the starting point. The R-squared value of 0.506 is an improvement over the linear models, explaining approximately 50.6% of the variability in house prices. This is indicative of the GAM's superior capability to capture the variance in house prices with its non-linear approach.
+
+The AIC and BIC values are slightly lower than those in the polynomial regression model, which implies that the GAM provides a better model fit with less information loss. However, the reduction is not as substantial, suggesting that while the GAM improves upon the fit of linear models, it may not be drastically different in terms of information criteria.
+
+The RMSE of the GAM is slightly lower than that of the multiple regression but higher than that of the polynomial regression, indicating that the model's predictions are reasonably accurate, although there might be some room for improvement. This metric confirms that while the GAM has enhanced the model's predictive capability, it does so in a way that is comparable but not necessarily superior to the polynomial approach, potentially due to the complexity and variability inherent in housing market data.
 
 ```{r}
 #| message: false
@@ -500,8 +532,6 @@ modelsummary(
 
 ```
 
-
-
 ```{r}
 #| message: false
 #| echo: false
@@ -513,6 +543,16 @@ modelsummary(
 plot(gam_model, pages=1)
 
 ```
+
+### Further Justification
+
+In comparing the Multiple Regression, Polynomial Regression, and Generalized Additive Model (GAM) applied to the housing market data, each model serves a distinct purpose based on the complexity of the relationships it can capture between the predictors and the house prices.
+
+The Multiple Regression model, with its linear approach, is the most straightforward, offering a baseline model for comparison. It is the least complex and most transparent, which makes it a good starting point for analysis but also the most limited in capturing the nuanced behavior of the housing market. The Polynomial Regression model advances this analysis by introducing non-linearity through polynomial terms, providing a significantly better fit as evidenced by its improved R-squared value and lower information criteria scores. It acknowledges and captures the more intricate patterns in housing prices related to time and property features.
+
+GAM takes flexibility a step further, not being constrained by predefined polynomial terms, which allows for an even more nuanced understanding of the data. This model adapts to the data's inherent trends through the use of smoothing functions, leading to an improved R-squared value compared to the Multiple Regression model. However, when compared to Polynomial Regression, the gains in model performance are modest. While the GAM model offers a refined approach, it does not significantly outperform the Polynomial Regression in terms of the information criteria and RMSE, suggesting that the increased complexity of GAM may not be necessary for this particular dataset.
+
+Ultimately, the choice between these models should be informed by the balance between the need for model simplicity and the desire to capture complex data relationships. While the Polynomial Regression strikes a balance offering a good fit without overly complicating the model, the GAM provides the most flexibility, which could be essential for more intricate datasets or where the precise nature of relationships between variables is less understood.
 
 # Discussion {#sec-dis}
 
