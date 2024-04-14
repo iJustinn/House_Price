@@ -40,6 +40,7 @@ install_and_load(packages)
 #| echo: false
 
 # read in data
+all_house_price <- read_csv("../../inputs/data/all_house_price.csv")
 house_prices <- read_csv("../../outputs/data/merged_house_price.csv")
 
 state_house_price_by_year <- read_csv("../../outputs/data/state_house_price_by_year.csv")
@@ -80,55 +81,118 @@ We selected this dataset for its reliability, depth, and alignment with our stud
 
 ## Method
 
-```{r}
-#| message: false
-#| echo: false
-#| warning: false
-#| fig-pos: 'h'
-#| label: tbl-sum
-#| tbl-cap: Summary statistics of the California housing dataset
-#| layout-ncol: 3
-#| layout-nrow: 3
-
-
-
-```
-
-
+Our analysis commenced with the essential task of refining the raw dataset downloaded from Zillow. The initial phase involved understanding the dataset’s structure. As the @tbl-raw_data showing, this dataset typically consists of multiple attributes such as Region ID, Region Type, location (states), year of transaction, house price, etc. Each record represents a unique property, providing a comprehensive snapshot of its characteristics.
 
 ```{r}
 #| message: false
 #| echo: false
 #| warning: false
 #| fig-pos: 'h'
-#| label: tbl-null-raw
-#| tbl-cap: Count of missing values for each variable
+#| label: tbl-raw_data
+#| tbl-cap: Raw Data Preview
 
-
+kable(head(all_house_price)[, 1:7])
 
 ```
 
+Then, we proceeded to clean and process the data as needed, setting the stage for deeper analysis. Our first step involved preprocessing the raw dataset from Zillow, which required several critical adjustments to ensure data quality and usability. Initially, we removed the first row of the dataset, which represented national averages rather than state-specific data, to focus our analysis on regional trends. This step was crucial as the inclusion of national data could skew the results when examining state-level dynamics.
 
+Next, we streamlined the dataset by removing less relevant columns such as 'SizeRank', 'RegionID', 'RegionType', and 'RegionName'. These columns were extraneous for our analysis, which aimed to concentrate on price fluctuations and trends across different states. By simplifying the dataset to whcih showing in @tbl-clean_data, we facilitated more focused and faster computations in subsequent steps.
 
 ```{r}
 #| message: false
 #| echo: false
 #| warning: false
 #| fig-pos: 'h'
-#| label: tbl-null-clean
-#| tbl-cap: Count of missing values for each variable after cleaning
+#| label: tbl-clean_data
+#| tbl-cap: Clean Data Preview
 
+clean_house_price <- all_house_price %>%
+  select(-c(SizeRank, RegionID, RegionType, RegionName))
 
+kable(head(clean_house_price)[, 1:7])
 
 ```
 
+After the initial cleanup, we performed a more detailed grouping and summarization of the data by state on a monthly basis showing in left table of @tbl-processed. For each state, we calculated the mean house price, excluding any missing values to ensure the accuracy of our results. This aggregation provided a clearer view of the monthly pricing trends across different states, serving as a foundational analysis for identifying patterns and anomalies.
 
+The data was further processed to derive yearly price trends from the monthly data showing in right table of @tbl-processed. We transformed the dataset by pivoting the monthly columns into a single column of house prices, tagged by corresponding months. After converting these month labels into date formats and extracting the year, we calculated the average house price per state for each year. This yearly aggregation helped in examining longer-term trends and making more strategic conclusions about the housing market dynamics.
+
+```{r}
+#| message: false
+#| echo: false
+#| warning: false
+#| fig-pos: 'h'
+#| label: tbl-processed
+#| tbl-cap: Processed Data Preview (by Month & by Year)
+#| layout-ncol: 2
+#| layout-nrow: 1
+
+state_house_price_by_month <- clean_house_price %>%
+  group_by(StateName) %>%
+  summarise(across(where(is.numeric), mean, na.rm = TRUE))
+
+state_house_price_by_year <- state_house_price_by_month %>%
+  pivot_longer(
+    cols = starts_with("20"),
+    names_to = "Month",
+    values_to = "HousePrice"
+  ) %>%
+  mutate(Year = year(ymd(Month))) %>%
+  group_by(StateName, Year) %>%
+  summarise(AvgHousePrice = mean(HousePrice, na.rm = TRUE), .groups = 'drop')
+
+kable(head(state_house_price_by_month)[, 1:3])
+
+kable(head(state_house_price_by_year))
+
+```
+
+Finally, as @tbl-hm_data shows, to create detailed heatmaps that visualize the distribution of average house prices across the United States, we enriched our dataset with additional geographic information. The subregion column are all NA since we do not need more detail than cities. This enhancement involved integrating region-specific data, along with precise longitude and latitude coordinates for each state. By incorporating these spatial dimensions, we were able to generate a more nuanced representation of the data, enabling us to pinpoint variations in housing prices with greater accuracy.
+
+```{r}
+#| message: false
+#| echo: false
+#| warning: false
+#| fig-pos: 'h'
+#| label: tbl-hm_data
+#| tbl-cap: Heatmap Data
+
+us_states_map <- map_data("state") # Getting map data for US states
+
+state_abbrev_to_full <- c( # Define the mapping from state abbreviations to full names
+  AL = "alabama", AK = "alaska", AZ = "arizona", AR = "arkansas", CA = "california",
+  CO = "colorado", CT = "connecticut", DE = "delaware", FL = "florida", GA = "georgia",
+  HI = "hawaii", ID = "idaho", IL = "illinois", IN = "indiana", IA = "iowa",
+  KS = "kansas", KY = "kentucky", LA = "louisiana", ME = "maine", MD = "maryland",
+  MA = "massachusetts", MI = "michigan", MN = "minnesota", MS = "mississippi",
+  MO = "missouri", MT = "montana", NE = "nebraska", NV = "nevada", NH = "new hampshire",
+  NJ = "new jersey", NM = "new mexico", NY = "new york", NC = "north carolina",
+  ND = "north dakota", OH = "ohio", OK = "oklahoma", OR = "oregon", PA = "pennsylvania",
+  RI = "rhode island", SC = "south carolina", SD = "south dakota", TN = "tennessee",
+  TX = "texas", UT = "utah", VT = "vermont", VA = "virginia", WA = "washington",
+  WV = "west virginia", WI = "wisconsin", WY = "wyoming", DC = "district of columbia"
+)
+
+overall_hm_data <- na.omit(state_house_price_by_year)
+overall_hm_data$StateName <- tolower(state_abbrev_to_full[overall_hm_data$StateName])
+
+overall_hm_data <- overall_hm_data %>%
+  group_by(StateName) %>%
+  summarise(AvgHousePrice = mean(AvgHousePrice, na.rm = TRUE))
+
+overall_hm_map_merged_data <- merge(us_states_map, overall_hm_data, by.x = "region", by.y = "StateName")
+
+kable(head(overall_hm_map_merged_data))
+
+```
+
+By meticulously cleaning and structuring the data through these steps, we ensured that our dataset was not only more manageable but also primed for high-quality, reliable analysis. This thorough preparation was instrumental in supporting our subsequent charting, statistical analyses and predictive modeling efforts.
 
 # Results {#sec-res}
 
 ```{r}
 #| include: false
-# Models Setup
 
 #### Multiple Regression Model ####
 model_multi <- lm(AvgHousePrice ~ Year + NumBedroom, data = house_prices)
@@ -153,6 +217,8 @@ gam_model <- gam(AvgHousePrice ~ s(Year, k=num_unique_years-1) + s(NumBedroom, k
 #| fig-pos: 'h'
 #| label: fig-trend_overall
 #| fig-cap: Trend of Average House Price from 2000 to 2024
+#| fig-width: 7
+#| fig-height: 3.5
 
 state_all <- state_house_price_by_month %>% select(-StateName) %>%  # Processing datasets
   summarise_all(mean, na.rm = TRUE) %>%
@@ -160,13 +226,30 @@ state_all <- state_house_price_by_month %>% select(-StateName) %>%  # Processing
 
 state_all$Date <- as.Date(state_all$Date) # Convert Date from character to Date type
 
+extrema <- state_all %>%
+  mutate(is_peak = ifelse(lag(AverageHousePrice, 1, default = first(AverageHousePrice)) < AverageHousePrice & 
+                            lead(AverageHousePrice, 1, default = last(AverageHousePrice)) < AverageHousePrice,
+                          TRUE, FALSE),
+         is_trough = ifelse(lag(AverageHousePrice, 1, default = first(AverageHousePrice)) > AverageHousePrice & 
+                              lead(AverageHousePrice, 1, default = last(AverageHousePrice)) > AverageHousePrice,
+                            TRUE, FALSE)) %>%
+  filter(is_peak | is_trough) %>%
+  select(Date, AverageHousePrice, is_peak, is_trough)
+
+extrema <- extrema %>%
+  filter(format(Date, "%Y") %in% c("2007", "2012", "2022"))
+
 ggplot(state_all, aes(x = Date, y = AverageHousePrice)) + # Plotting
-  geom_line(color = "blue") + 
+  geom_line(color = "black") + 
+  geom_text(data = extrema, aes(label = format(Date, "%Y")), nudge_y = 10000, check_overlap = TRUE, color = "black") +
+  geom_vline(data = extrema, aes(xintercept = as.numeric(Date)), linetype = "dashed", color = "red") +
   labs(x = "Year", y = "Average House Price ($)") + 
   theme_minimal() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-```
+``` 
+
+@fig-trend_overall illustrates the average house price trend from 2000 to 2024. This graph highlights several inflection points in housing prices over the span of nearly a quarter of a century. A significant peak occurs in 2006, followed by a notable dip culminating in a trough in 2012. Subsequently, prices climb, reaching another prominent peak in 2022. The chart clearly marks these fluctuations, drawing attention to the cyclic nature of the housing market over time. When we ignore these brief highs or lows, the overall trend of housing prices is a clear upward trend.
 
 ```{r}
 #| message: false
@@ -175,8 +258,10 @@ ggplot(state_all, aes(x = Date, y = AverageHousePrice)) + # Plotting
 #| fig-pos: 'h'
 #| label: fig-trend_by_type
 #| fig-cap: Trend of Average House Price from 2000 to 2024 by House Type
+#| fig-width: 7
+#| fig-height: 3.5
 
-process_data <- function(data, label) { # Function to process each dataset
+process_data <- function(data, label) {
   data %>% 
     select(-StateName) %>%
     summarise_all(mean, na.rm = TRUE) %>%
@@ -185,28 +270,32 @@ process_data <- function(data, label) { # Function to process each dataset
            Date = as.Date(Date))
 }
 
-data_list <- list( # Processing all datasets
-  one_bedroom = state_1b_house_price_by_month,
-  two_bedroom = state_2b_house_price_by_month,
-  three_bedroom = state_3b_house_price_by_month,
-  four_bedroom = state_4b_house_price_by_month,
-  five_plus_bedroom = state_5bplus_house_price_by_month
+data_list <- list(
+  `1B` = state_1b_house_price_by_month,
+  `2B` = state_2b_house_price_by_month,
+  `3B` = state_3b_house_price_by_month,
+  `4B` = state_4b_house_price_by_month,
+  `5B+` = state_5bplus_house_price_by_month
 )
 
 processed_data <- lapply(names(data_list), function(name) process_data(data_list[[name]], name))
 
-combined_data <- bind_rows(processed_data) # Combining all processed data into one dataframe
+combined_data <- bind_rows(processed_data)
 
-ggplot(combined_data, aes(x = Date, y = AverageHousePrice, color = Trend)) + # Plotting
+ggplot(combined_data, aes(x = Date, y = AverageHousePrice, color = Trend)) +
   geom_line() + 
   labs(x = "Year", y = "Average House Price ($)") +
   theme_minimal() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  scale_color_viridis_d(name = "House Type")
+  scale_color_viridis_d(name = "Number of Bedrooms")
 
 ```
 
+@fig-trend_by_type segments the average house price trends from 2000 to 2024 by house type, from one-bedroom to houses with five or more bedrooms. The trajectory for each house type is distinct, with the five-plus-bedroom category reaching the highest average prices, particularly exhibiting a sharp rise after 2012. The four-bedroom category shows substantial growth, albeit less sharply than the largest homes. One and two-bedroom homes reveal a more gradual increase, suggesting a different progression in price trends compared to larger properties. The disparities among the trends of different house types highlight the varied performance within the housing market. The overall price trend of different bedroom types is also showing a clear upward trend.
+
 ## Heat Maps
+
+The heat map in @fig-hm_overall illustrates the average house prices across different states in the United States. The color gradient represents the average house price range, with the scale on the right indicating higher values in warmer colors (yellows and reds) and lower values in cooler colors (purples). The states colored with the warmer end of the spectrum exhibit higher average house prices, whereas those in the cooler end show lower average prices. There appears to be a geographical pattern where certain regions are predominantly one color, indicating a regional similarity in housing prices. States in the central part of the map are mostly in the mid-range of the color scale, neither the highest nor the lowest in average house price. The variation in color intensity among the states suggests a diversity in average house pricing across the country. Further, in the @fig-hm_overall, we can observe that there are a few states, particularly on the east and west coasts, such as California and New York, that are shaded in these most yellowish colour. These states stand out from the rest, suggesting they have notably higher average house prices compared to states with cooler colors (purples and dark blues).
 
 ```{r}
 #| message: false
@@ -232,16 +321,16 @@ state_abbrev_to_full <- c( # Define the mapping from state abbreviations to full
   WV = "west virginia", WI = "wisconsin", WY = "wyoming", DC = "district of columbia"
 )
 
-overall_hm_data <- na.omit(state_house_price_by_year) # Delete all NAs
-overall_hm_data$StateName <- tolower(state_abbrev_to_full[overall_hm_data$StateName]) # Convert StateName from abbreviation to full name
+overall_hm_data <- na.omit(state_house_price_by_year)
+overall_hm_data$StateName <- tolower(state_abbrev_to_full[overall_hm_data$StateName])
 
-overall_hm_data <- overall_hm_data %>% # Taking average for house price based on states
+overall_hm_data <- overall_hm_data %>%
   group_by(StateName) %>%
   summarise(AvgHousePrice = mean(AvgHousePrice, na.rm = TRUE))
 
-overall_hm_map_merged_data <- merge(us_states_map, overall_hm_data, by.x = "region", by.y = "StateName") # Merge data ready for chart
+overall_hm_map_merged_data <- merge(us_states_map, overall_hm_data, by.x = "region", by.y = "StateName")
 
-ggplot() + # Generating heat map
+ggplot() +
   geom_polygon(data = overall_hm_map_merged_data, aes(x = long, y = lat, group = group, fill = AvgHousePrice), color = "white") +
   coord_fixed(1.3) +
   scale_fill_viridis(name = "Avg House Price", option = "plasma") +
@@ -249,6 +338,12 @@ ggplot() + # Generating heat map
   theme(legend.position = "right")
 
 ```
+
+@fig-hm_by_type comprises a collection of heatmaps (labeled a through e) that delineate the average house prices by state within the United States, segmented by the number of bedrooms. In the one-bedroom category @fig-hm_by_type-1, the color distribution is relatively homogeneous, suggesting minor variations in average prices across the states. Moving to the two-bedroom category @fig-hm_by_type-2, there is a discernible increase in the range of colors, which implies a modest expansion in the price range across different states.
+
+As the number of bedrooms increases to three @fig-hm_by_type-3, the color contrast intensifies, indicative of a wider disparity in average prices among the states. This trend continues with the four-bedroom heatmap @fig-hm_by_type-4, where a richer variety of colors emerges, particularly with several states displaying notably darker hues, signaling higher average prices.
+
+The heatmap for homes with five or more bedrooms @fig-hm_by_type-5 showcases the most striking contrast in color intensity, with several states marked by significantly darker shades. This pattern demonstrates that there is a broad spectrum of average prices for larger homes, with some states showing considerably higher average prices than others, as evidenced by the more intense coloring. Each heatmap distinctly represents the average price range for each house category, visually emphasizing the range from lower to higher average prices across the states.
 
 ```{r}
 #| message: false
@@ -260,8 +355,10 @@ ggplot() + # Generating heat map
 #| fig-subcap: ["one bedroom","two bedrooms","three bedrooms","four bedrooms","five plus bedrooms"]
 #| layout-ncol: 2
 #| layout-nrow: 3
+#| fig-width: 7
+#| fig-height: 3
 
-us_states_map <- map_data("state") # Getting map data for US states
+us_states_map <- map_data("state")
 
 state_abbrev_to_full <- c( # Define the mapping from state abbreviations to full names
   AL = "alabama", AK = "alaska", AZ = "arizona", AR = "arkansas", CA = "california",
@@ -278,23 +375,21 @@ state_abbrev_to_full <- c( # Define the mapping from state abbreviations to full
 )
 
 #### US States 1b House Price Heat Map ####
-oneb_hm_data <- na.omit(state_1b_house_price_by_year) # Delete all NAs
-oneb_hm_data$StateName <- tolower(state_abbrev_to_full[oneb_hm_data$StateName]) # Convert StateName from abbreviation to full name
+oneb_hm_data <- na.omit(state_1b_house_price_by_year)
+oneb_hm_data$StateName <- tolower(state_abbrev_to_full[oneb_hm_data$StateName])
 
-oneb_hm_data <- oneb_hm_data %>% # Taking average for house price based on states
+oneb_hm_data <- oneb_hm_data %>%
   group_by(StateName) %>%
   summarise(AvgHousePrice = mean(AvgHousePrice, na.rm = TRUE))
 
-oneb_hm_map_merged_data <- merge(us_states_map, oneb_hm_data, by.x = "region", by.y = "StateName") # Merge data ready for chart
+oneb_hm_map_merged_data <- merge(us_states_map, oneb_hm_data, by.x = "region", by.y = "StateName")
 
-ggplot() + # Generating heat map
+ggplot() +
   geom_polygon(data = oneb_hm_map_merged_data, aes(x = long, y = lat, group = group, fill = AvgHousePrice), color = "white") +
   coord_fixed(1.3) +
   scale_fill_viridis(name = "Avg House Price", option = "plasma") +
   theme_minimal() +
   theme(legend.position = "right")
-
-
 
 #### US States 2b House Price Heat Map ####
 twob_hm_data <- na.omit(state_2b_house_price_by_year) # Delete all NAs
@@ -313,8 +408,6 @@ ggplot() + # Generating heat map
   theme_minimal() +
   theme(legend.position = "right")
 
-
-
 #### US States 3b House Price Heat Map ####
 threeb_hm_data <- na.omit(state_3b_house_price_by_year) # Delete all NAs
 threeb_hm_data$StateName <- tolower(state_abbrev_to_full[threeb_hm_data$StateName]) # Convert StateName from abbreviation to full name
@@ -332,8 +425,6 @@ ggplot() + # Generating heat map
   theme_minimal() +
   theme(legend.position = "right")
 
-
-
 #### US States 4b House Price Heat Map ####
 fourb_hm_data <- na.omit(state_4b_house_price_by_year) # Delete all NAs
 fourb_hm_data$StateName <- tolower(state_abbrev_to_full[fourb_hm_data$StateName]) # Convert StateName from abbreviation to full name
@@ -350,8 +441,6 @@ ggplot() + # Generating heat map
   scale_fill_viridis(name = "Avg House Price", option = "plasma") +
   theme_minimal() +
   theme(legend.position = "right")
-
-
 
 #### US States 5b+ House Price Heat Map ####
 fiveb_hm_data <- na.omit(state_5bplus_house_price_by_year) # Delete all NAs
@@ -372,9 +461,9 @@ ggplot() + # Generating heat map
 
 ```
 
-
-
 ## Modeling
+
+
 
 ```{r}
 #| message: false
