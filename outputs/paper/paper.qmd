@@ -60,7 +60,11 @@ state_5bplus_house_price_by_month <- read_csv("../../outputs/data/state_5bplus_h
 
 # Introduction
 
+This paper will focus on exploring trends in U.S. house prices, a pertinent issue as real estate markets worldwide have experienced significant increases. Cities like Toronto, Canada, and Beijing, China have witnessed substantial escalations in housing costs, reflecting a global phenomenon. This study shifts its focus to the United States, one of the most economically stable and developed countries in the world, to determine if similar trends persist in its real estate market. By examining the U.S. housing market, this research aims to uncover the principal factors influencing house prices.
 
+The U.S. real estate market offers a unique case study due to its diverse economic landscapes and varied housing markets across states and metropolitan areas. This analysis will consider variables such as location, number of bedrooms, and other key factors that are believed to significantly impact house pricing dynamics. Understanding these factors is crucial, as the findings will provide insights into how policy adjustments and economic changes can affect housing affordability. Ultimately, this research aims to serve as a guide for policymakers, investors, and the public, helping them make informed decisions regarding housing investments and urban planning.
+
+Following this introduction, @sec-data (Methodology), outlines key reasons of the dataset choice, main processing techniques employed, emphasizing transparency and replicability. @sec-res (Results) presents the findings, specifically focusing on the dynamics of house prices across various U.S. states and metropolitan areas. @sec-dis (Discussion), analyzes these findings from the perspectives outlined earlier, integrating economic, policy, and regional variables. Finally, @sec-con (Conclusion), summarizes the key insights and implications of this research, offering recommendations for policymakers and stakeholders involved in the housing market.
 
 # Data {#sec-data}
 
@@ -68,7 +72,11 @@ Data used in this paper was cleaned, processed and tested with the programming l
 
 ## Source
 
+Our study focuse on U.S. house price trends using the comprehensive datasets available from Zillow Research  [@citeZillowdata]. This data repository offers an extensive array of real estate statistics, capturing the dynamics of house prices across various regions in the United States. As a cornerstone of transparency and public engagement, Zillow Research provides open access to these crucial real estate data, which are instrumental in understanding housing market behaviors.
 
+The dataset includes detailed information on house prices over several years, with breakdowns by state, city, and sometimes neighborhood levels, from median list prices to Zillow Home Value Index (ZHVI). This granularity allows for a nuanced analysis of house price trends and the identification of significant market dynamics, guiding potential real estate investments and policy formulations.
+
+We selected this dataset for its reliability, depth, and alignment with our study’s goals. As a trusted source in the real estate market, it provides accurate and timely data crucial for our analysis. Its comprehensive geographic and property-specific details allow for an in-depth examination of factors influencing house prices in the U.S. Additionally, the dataset’s structure supports efficient analysis and modeling of real estate trends. More details about this dataset can be found in the datasheet in @sec-app (Appendix).
 
 ## Method
 
@@ -421,19 +429,19 @@ plot(gam_model, pages=1)
 
 
 
-## Demographic Shifts
+## 1
 
 
 
-## Health-related Behaviors
+## 2
 
 
 
-## Government Policies
+## 3
 
 
 
-## Environmental Changes
+## 4
 
 
 
@@ -449,7 +457,7 @@ plot(gam_model, pages=1)
 
 \appendix
 
-# Appendix
+# Appendix {#sec-app}
 
 ## Datasheet
 
