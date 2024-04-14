@@ -1,6 +1,6 @@
 ---
-title: "TBD"
-subtitle: "TBD"
+title: "Analyzing Trends in U.S. Residential Real Estate Prices"
+subtitle: "A Data-Driven Approach to Understand the Market"
 author: 
   - Ziheng Zhong
 thanks: "Code and data are available at: https://github.com/iJustinn/House_Price.git"
