@@ -215,10 +215,12 @@ gam_model <- gam(AvgHousePrice ~ s(Year, k=num_unique_years-1) + s(NumBedroom, k
 #| echo: false
 #| warning: false
 #| fig-pos: 'h'
-#| label: fig-trend_overall
-#| fig-cap: Trend of Average House Price from 2000 to 2024
+#| label: fig-trend
+#| fig-subcap: ["Trend of Average House Price from 2000 to 2024", "Trend of Average House Price from 2000 to 2024 by House Type"]
+#| layout-ncol: 1
+#| layout-nrow: 2
 #| fig-width: 7
-#| fig-height: 3.5
+#| fig-height: 4
 
 state_all <- state_house_price_by_month %>% select(-StateName) %>%  # Processing datasets
   summarise_all(mean, na.rm = TRUE) %>%
@@ -246,20 +248,6 @@ ggplot(state_all, aes(x = Date, y = AverageHousePrice)) + # Plotting
   labs(x = "Year", y = "Average House Price ($)") + 
   theme_minimal() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-``` 
-
-@fig-trend_overall illustrates the average house price trend from 2000 to 2024. This graph highlights several inflection points in housing prices over the span of nearly a quarter of a century. A significant peak occurs in 2006, followed by a notable dip culminating in a trough in 2012. Subsequently, prices climb, reaching another prominent peak in 2022. The chart clearly marks these fluctuations, drawing attention to the cyclic nature of the housing market over time. When we ignore these brief highs or lows, the overall trend of housing prices is a clear upward trend.
-
-```{r}
-#| message: false
-#| echo: false
-#| warning: false
-#| fig-pos: 'h'
-#| label: fig-trend_by_type
-#| fig-cap: Trend of Average House Price from 2000 to 2024 by House Type
-#| fig-width: 7
-#| fig-height: 3.5
 
 process_data <- function(data, label) {
   data %>% 
@@ -289,9 +277,11 @@ ggplot(combined_data, aes(x = Date, y = AverageHousePrice, color = Trend)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   scale_color_viridis_d(name = "Number of Bedrooms")
 
-```
+``` 
 
-@fig-trend_by_type segments the average house price trends from 2000 to 2024 by house type, from one-bedroom to houses with five or more bedrooms. The trajectory for each house type is distinct, with the five-plus-bedroom category reaching the highest average prices, particularly exhibiting a sharp rise after 2012. The four-bedroom category shows substantial growth, albeit less sharply than the largest homes. One and two-bedroom homes reveal a more gradual increase, suggesting a different progression in price trends compared to larger properties. The disparities among the trends of different house types highlight the varied performance within the housing market. The overall price trend of different bedroom types is also showing a clear upward trend.
+@fig-trend-1 illustrates the average house price trend from 2000 to 2024. This graph highlights several inflection points in housing prices over the span of nearly a quarter of a century. A significant peak occurs in 2006, followed by a notable dip culminating in a trough in 2012. Subsequently, prices climb, reaching another prominent peak in 2022. The chart clearly marks these fluctuations, drawing attention to the cyclic nature of the housing market over time. When we ignore these brief highs or lows, the overall trend of housing prices has a clear upward trend.
+
+@fig-trend-2 segments the average house price trends from 2000 to 2024 by house type, from one-bedroom to houses with five or more bedrooms. The trajectory for each house type is distinct, with the five-plus-bedroom category reaching the highest average prices, particularly exhibiting a sharp rise after 2012. The four-bedroom category shows substantial growth, albeit less sharply than the largest homes. One and two-bedroom homes reveal a more gradual increase, suggesting a different progression in price trends compared to larger properties. The disparities among the trends of different house types highlight the varied performance within the housing market. The overall price trend of different bedroom types is also showing a clear upward trend.
 
 ## Heat Maps
 
@@ -304,6 +294,8 @@ The heat map in @fig-hm_overall illustrates the average house prices across diff
 #| fig-pos: 'h'
 #| label: fig-hm_overall
 #| fig-cap: Average Price by State in the US for All House Types
+#| fig-width: 7
+#| fig-height: 2.5
 
 us_states_map <- map_data("state") # Getting map data for US states
 
@@ -339,12 +331,6 @@ ggplot() +
 
 ```
 
-@fig-hm_by_type comprises a collection of heatmaps (labeled a through e) that delineate the average house prices by state within the United States, segmented by the number of bedrooms. In the one-bedroom category @fig-hm_by_type-1, the color distribution is relatively homogeneous, suggesting minor variations in average prices across the states. Moving to the two-bedroom category @fig-hm_by_type-2, there is a discernible increase in the range of colors, which implies a modest expansion in the price range across different states.
-
-As the number of bedrooms increases to three @fig-hm_by_type-3, the color contrast intensifies, indicative of a wider disparity in average prices among the states. This trend continues with the four-bedroom heatmap @fig-hm_by_type-4, where a richer variety of colors emerges, particularly with several states displaying notably darker hues, signaling higher average prices.
-
-The heatmap for homes with five or more bedrooms @fig-hm_by_type-5 showcases the most striking contrast in color intensity, with several states marked by significantly darker shades. This pattern demonstrates that there is a broad spectrum of average prices for larger homes, with some states showing considerably higher average prices than others, as evidenced by the more intense coloring. Each heatmap distinctly represents the average price range for each house category, visually emphasizing the range from lower to higher average prices across the states.
-
 ```{r}
 #| message: false
 #| echo: false
@@ -355,7 +341,7 @@ The heatmap for homes with five or more bedrooms @fig-hm_by_type-5 showcases the
 #| fig-subcap: ["one bedroom","two bedrooms","three bedrooms","four bedrooms","five plus bedrooms"]
 #| layout-ncol: 2
 #| layout-nrow: 3
-#| fig-width: 7
+#| fig-width: 6.5
 #| fig-height: 3
 
 us_states_map <- map_data("state")
@@ -461,35 +447,27 @@ ggplot() + # Generating heat map
 
 ```
 
+@fig-hm_by_type comprises a collection of heatmaps (labeled a through e) that delineate the average house prices by state within the United States, segmented by the number of bedrooms. In the one-bedroom category @fig-hm_by_type-1, the color distribution is relatively homogeneous, suggesting minor variations in average prices across the states. Moving to the two-bedroom category @fig-hm_by_type-2, there is a discernible increase in the range of colors, which implies a modest expansion in the price range across different states.
+
+As the number of bedrooms increases to three @fig-hm_by_type-3, the color contrast intensifies, indicative of a wider disparity in average prices among the states. This trend continues with the four-bedroom heatmap @fig-hm_by_type-4, where a richer variety of colors emerges, particularly with several states displaying notably darker hues, signaling higher average prices.
+
+The heatmap for homes with five or more bedrooms @fig-hm_by_type-5 showcases the most striking contrast in color intensity, with several states marked by significantly darker shades. This pattern demonstrates that there is a broad spectrum of average prices for larger homes, with some states showing considerably higher average prices than others, as evidenced by the more intense coloring. Each heatmap distinctly represents the average price range for each house category, visually emphasizing the range from lower to higher average prices across the states.
+
 ## Modeling
 
 ### Model Setup
 
+$$\text{Price} = \beta_0 + \beta_1 \times \text{Year} + \beta_2 \times \text{NumBedroom}$$
+
 The setup for the Multiple Regression model is straightforward, with direct relationships between the independent variables (Year and NumBedroom) and the dependent variable (house price). This model assumes that these relationships are linear and additive.
 
-$$
-TBD
-$$
+$$\text{Price} = \beta_0 + \beta_1 \times \text{Year} + \beta_2 \times \text{Year}^2 + \beta_3 \times \text{NumBedroom} + \beta_4 \times \text{NumBedroom}^2$$
 
 In contrast, the Polynomial Regression model requires a more intricate setup. It involves creating polynomial transformations of the independent variables to allow the model to fit non-linear trends. Specifically, the second-degree polynomial terms are created to model the curvature in the data, accounting for the possibility that the effect of time and the number of bedrooms on house prices changes at different rates. This setup acknowledges that increases in house prices may accelerate or decelerate over time and that the price premium for additional bedrooms may not be constant but could increase or decrease with the number of bedrooms.
 
-$$
-TBD
-$$
+$$\text{Intercept for GAM} = \beta_0$$
 
-The Generalized Additive Model (GAM) represents a flexible approach to modeling complex, non-linear relationships between the dependent and independent variables. The setup for the GAM model in this study involves specifying smooth functions of the predictors (likely year and number of bedrooms), allowing for the accommodation of non-linear trends that cannot be captured by traditional linear models. Unlike polynomial regression, which explicitly models non-linearity through polynomial terms, GAM uses smoothing functions that are fitted to the data in a non-parametric manner. This approach enables the model to adapt to the shape of the underlying trend without pre-specifying the form of the relationship, thus providing a tailored fit to the peculiarities in the data.
-
-$$
-TBD
-$$
-
-### Multiple Regression
-
-The Multiple Regression model reveals some intriguing insights about the housing market. It shows a substantial negative intercept, suggesting that starting from the model's baseline (which may be the earliest year in the data, though not directly interpretable), the house prices are initially low. The positive coefficient for 'Year' implies that there's a general trend of increasing house prices over time. Every passing year is associated with an increase in the average house price, as indicated by the coefficient of 6,958.769. Additionally, the 'NumBedroom' variable carries a positive coefficient of 59,897.327, which suggests that houses with more bedrooms tend to have higher prices. This model accounts for 44.5% of the variability in house prices (R-squared = 0.445), which is respectable but indicates that over half of the variance is explained by factors not included in the model.
-
-### Polynomial Regression
-
-Switching to the Polynomial Regression model, the positive intercept is considerably high, indicating that the baseline price for houses at the starting point of the model is substantial. The inclusion of polynomial terms for 'Year' and 'NumBedroom' indicates a non-linear relationship between these variables and house prices. The positive coefficients for the polynomial terms of 'Year' suggest an initial increase in prices, but as the magnitude of the coefficients for the quadratic terms is lower, this might indicate a slowing growth rate or a potential future downturn in prices. The coefficients for 'NumBedroom' follow a similar pattern, hinting that the increase in price associated with additional bedrooms becomes less pronounced as the number of bedrooms increases. This model fits the data slightly better than the Multiple Regression model, as evidenced by a higher R-squared value of 0.479. The lower AIC and BIC values suggest it is more efficient, and the reduced RMSE indicates improved prediction accuracy.
+The Generalized Additive Model (GAM) represents a flexible approach to modeling complex, non-linear relationships between the dependent and independent variables. This Model does not really have a fixed equation with coefficients due to its use of smoothing functions. The setup for the GAM model in this study involves specifying the smooth functions of the predictors, year and number of bedrooms, allowing for the accommodation of non-linear trends that cannot be captured by traditional linear models. Unlike polynomial regression, which explicitly models non-linearity through polynomial terms, GAM uses smoothing functions that are fitted to the data in a non-parametric manner. This approach enables the model to adapt to the shape of the underlying trend without pre-specifying the form of the relationship, thus providing a tailored fit to the peculiarities in the data.
 
 ```{r}
 #| message: false
@@ -508,7 +486,24 @@ modelsummary(
 
 ```
 
+After some understanding of model choices, @tbl-linear_model_result and @tbl-nonlinear_model_result displays the regression results, which will be explain with detials in later sections.
+
+### Multiple Regression
+
+$$\text{Price} = -13,969,628.019 + 6,958.769 \times \text{Year} + 59,897.327 \times \text{NumBedroom}$$
+
+The Multiple Regression model reveals some intriguing insights about the housing market. It shows a substantial negative intercept, suggesting that starting from the model's baseline (which may be the earliest year in the data, though not directly interpretable), the house prices are initially low. The positive coefficient for 'Year' implies that there's a general trend of increasing house prices over time. Every passing year is associated with an increase in the average house price, as indicated by the coefficient of 6,958.769. Additionally, the 'NumBedroom' variable carries a positive coefficient of 59,897.327, which suggests that houses with more bedrooms tend to have higher prices. This model accounts for 44.5% of the variability in house prices (R-squared = 0.445), which is respectable but indicates that over half of the variance is explained by factors not included in the model.
+
+### Polynomial Regression
+
+$$\text{Price} = 212,976.031 + 3,866,485.706 \times \text{Year} + 1,601,816.793 \times \text{Year}^2$$
+$$+ 6,591,537.312 \times \text{NumBedroom} + 1,365,656.076 \times \text{NumBedroom}^2$$
+
+Switching to the Polynomial Regression model, the positive intercept is considerably high, indicating that the baseline price for houses at the starting point of the model is substantial. The inclusion of polynomial terms for 'Year' and 'NumBedroom' indicates a non-linear relationship between these variables and house prices. The positive coefficients for the polynomial terms of 'Year' suggest an initial increase in prices, but as the magnitude of the coefficients for the quadratic terms is lower, this might indicate a slowing growth rate or a potential future downturn in prices. The coefficients for 'NumBedroom' follow a similar pattern, hinting that the increase in price associated with additional bedrooms becomes less pronounced as the number of bedrooms increases. This model fits the data slightly better than the Multiple Regression model, as evidenced by a higher R-squared value of 0.479. The lower AIC and BIC values suggest it is more efficient, and the reduced RMSE indicates improved prediction accuracy.
+
 ### Generalized Additive Model (GAM)
+
+$$\text{Intercept for GAM} = 212,976.031$$
 
 The results of the GAM model as shown in Table 6 indicate a significant positive intercept, similar to the polynomial regression model, suggesting a high base price for the houses at the starting point. The R-squared value of 0.506 is an improvement over the linear models, explaining approximately 50.6% of the variability in house prices. This is indicative of the GAM's superior capability to capture the variance in house prices with its non-linear approach.
 
@@ -532,12 +527,20 @@ modelsummary(
 
 ```
 
+Furthermore, two charts in @fig-GAM_fit each showing the smoothed relationship between the predictor and the response variable (house price), with a solid line representing the estimated function and dashed lines indicating the confidence interval around the estimate.
+
+The plot on the left shows the relationship between 'Year' and house prices. There’s a clear non-linear trend. The prices appear to have a cyclical pattern with a significant peak around 2006, followed by a sharp decline, which likely corresponds to the global financial crisis of 2008. After this trough, there’s a recovery with prices trending upwards again, but with a suggestion of leveling off towards the end of the period. This could indicate a stabilization in the market or potentially the beginning of another downturn.
+
+The plot on the right shows the relationship between 'NumBedroom' and house prices. This relationship is more straightforward: as the number of bedrooms increases, so does the house price. The upward trend appears to be exponential rather than linear, suggesting that additional bedrooms have an increasingly positive effect on house prices. The confidence interval widens with the number of bedrooms, indicating more variability in the data for houses with more bedrooms, which could be due to fewer observations in the higher bedroom categories or greater variance in prices for larger homes.
+
+Both plots reveal the flexibility of GAMs in modeling complex relationships, allowing for the identification of trends that simpler linear models could miss. The confidence intervals suggest the model is fairly confident about its estimates, especially for the 'NumBedroom' variable. However, the wider intervals at the extremes of the data range would call for cautious interpretation in those areas.
+
 ```{r}
 #| message: false
 #| echo: false
 #| warning: false
 #| fig-pos: 'h'
-#| label: fig-GAM
+#| label: fig-GAM_fit
 #| tbl-cap: GAM Regression Fit Result
 
 plot(gam_model, pages=1)
@@ -552,11 +555,11 @@ The Multiple Regression model, with its linear approach, is the most straightfor
 
 GAM takes flexibility a step further, not being constrained by predefined polynomial terms, which allows for an even more nuanced understanding of the data. This model adapts to the data's inherent trends through the use of smoothing functions, leading to an improved R-squared value compared to the Multiple Regression model. However, when compared to Polynomial Regression, the gains in model performance are modest. While the GAM model offers a refined approach, it does not significantly outperform the Polynomial Regression in terms of the information criteria and RMSE, suggesting that the increased complexity of GAM may not be necessary for this particular dataset.
 
+However, the visual representation of data trends provided by @fig-GAM_fit is not just intuitively appealing but also offers practical insights that might be obscured in tabular regression outputs. For example, the cyclical pattern observed in the 'Year' graph aligns with known economic events that affected housing prices, demonstrating GAM's capacity to capture externalities and temporal dynamics beyond the reach of conventional linear models.
+
 Ultimately, the choice between these models should be informed by the balance between the need for model simplicity and the desire to capture complex data relationships. While the Polynomial Regression strikes a balance offering a good fit without overly complicating the model, the GAM provides the most flexibility, which could be essential for more intricate datasets or where the precise nature of relationships between variables is less understood.
 
 # Discussion {#sec-dis}
-
-
 
 ## 1
 
