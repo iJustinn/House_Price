@@ -1,4 +1,4 @@
-# House_Price
+# Analyzing Trends in U.S. Residential Real Estate Prices
 
 This study is focusing on analyzing US house prices for around past 20 years, focusing on building models to fit and predict the future of this market. It provides a comprehensive analysis of price trends across different states and housing types, revealing significant escalations in recent years. The study elucidates how location, property characteristics, and external economic factors influence house prices.
 
