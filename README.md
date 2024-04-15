@@ -1,12 +1,10 @@
 # House_Price
 
-This study is focusing on analyzing US house prices for around past 20 years, focusing on building models to fit and predict the future of this market. Not finished...
+This study is focusing on analyzing US house prices for around past 20 years, focusing on building models to fit and predict the future of this market. It provides a comprehensive analysis of price trends across different states and housing types, revealing significant escalations in recent years. The study elucidates how location, property characteristics, and external economic factors influence house prices.
 
 ## Paper Overview
 
-By using the data collected by [Zillow Research](https://www.zillow.com/research/data/), ...
-
-The comprehensive analysis was conducted using `R` programming and is presented as a final research paper in `PDF` format.
+This Research focuse on U.S. house price trends using the comprehensive datasets available from [Zillow Research](https://www.zillow.com/research/data/). This data repository offers an extensive array of real estate statistics, capturing the dynamics of house prices across various regions in the United States. As a cornerstone of transparency and public engagement, Zillow Research provides open access to these crucial real estate data, which are instrumental in understanding housing market behaviors. The comprehensive analysis was conducted using `R` programming and is presented as a final research paper in `PDF` format.
 
 ## File Structure
 
