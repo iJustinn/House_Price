@@ -22,8 +22,8 @@ The files for this research are organized in the following ways:
 
 -   `outputs/charts`: previews of the charts and models included in the final research paper
 
--   `scripts`: R code used for data simulation, processes, analysis, modeling and testing
+-   `scripts`: R code used for data simulation, processing, analysis, modeling, and testing.
 
 ## Large Language Model (LLM) usage statement
 
-This project utilized ChatGPT to assist during the research, development, and writing processes. A record of usage can be found in the `inputs/llm` folder of this repository.
+This project utilized ChatGPT-4 to assist with the research, development, and writing processes. A record of usage is available in the `inputs/llm` folder of this repository.
