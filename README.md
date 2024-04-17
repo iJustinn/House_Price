@@ -12,6 +12,8 @@ The files for this research are organized in the following ways:
 
 -   `inputs/data`: the raw data used for analysis
 
+-   `inputs/sketches`: hand-drawn sketches used during the planning of this research
+
 -   `inputs/llm`: records of multiple conversations with ChatGPT that assisted in building this project
 
 -   `outputs/data`: the cleaned data used for analysis
