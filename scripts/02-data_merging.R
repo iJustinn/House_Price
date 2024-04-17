@@ -9,6 +9,7 @@
 
 
 #### Workspace setup ####
+library(arrow)
 library(dplyr)
 library(tidyverse)
 library(lubridate)
@@ -16,11 +17,13 @@ library(lubridate)
 
 
 #### load data ####
-state_1b_house_price_by_year <- read_csv("../../outputs/data/state_1b_house_price_by_year.csv")
-state_2b_house_price_by_year <- read_csv("../../outputs/data/state_2b_house_price_by_year.csv")
-state_3b_house_price_by_year <- read_csv("../../outputs/data/state_3b_house_price_by_year.csv")
-state_4b_house_price_by_year <- read_csv("../../outputs/data/state_4b_house_price_by_year.csv")
-state_5bplus_house_price_by_year <- read_csv("../../outputs/data/state_5bplus_house_price_by_year.csv")
+setwd("/Users/ijustin/Library/CloudStorage/Dropbox/Code/STA302/Research_Papers/House_Price")
+
+state_1b_house_price_by_year <- read_csv("outputs/data/state_1b_house_price_by_year.csv")
+state_2b_house_price_by_year <- read_csv("outputs/data/state_2b_house_price_by_year.csv")
+state_3b_house_price_by_year <- read_csv("outputs/data/state_3b_house_price_by_year.csv")
+state_4b_house_price_by_year <- read_csv("outputs/data/state_4b_house_price_by_year.csv")
+state_5bplus_house_price_by_year <- read_csv("outputs/data/state_5bplus_house_price_by_year.csv")
 
 
 
@@ -49,8 +52,7 @@ state_5bplus_house_price_by_year <- state_5bplus_house_price_by_year %>%
 merge_data <- bind_rows(state_1b_house_price_by_year, state_2b_house_price_by_year, state_3b_house_price_by_year, state_4b_house_price_by_year, state_5bplus_house_price_by_year)
 merge_data <- na.omit(merge_data)
 
-#### save data ####
-write_csv(
-  x = merge_data,
-  file = "outputs/data/merged_house_price.csv"
-)
+
+
+#### save data as Parquet ####
+write_parquet(merge_data, "outputs/data/merged_house_price.parquet")

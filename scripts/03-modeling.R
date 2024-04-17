@@ -19,7 +19,7 @@ library(modelsummary)
 
 
 #### load data ####
-house_prices <- read_csv("../../outputs/data/merged_house_price.csv")
+house_prices <- read_csv("../../outputs/data/merged_house_price.parquet")
 
 
 
