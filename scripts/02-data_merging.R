@@ -17,8 +17,6 @@ library(lubridate)
 
 
 #### load data ####
-setwd("/Users/ijustin/Library/CloudStorage/Dropbox/Code/STA302/Research_Papers/House_Price")
-
 state_1b_house_price_by_year <- read_csv("outputs/data/state_1b_house_price_by_year.csv")
 state_2b_house_price_by_year <- read_csv("outputs/data/state_2b_house_price_by_year.csv")
 state_3b_house_price_by_year <- read_csv("outputs/data/state_3b_house_price_by_year.csv")

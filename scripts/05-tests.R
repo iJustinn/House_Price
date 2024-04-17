@@ -9,6 +9,7 @@
 
 
 #### Workspace setup ####
+library(arrow)
 library(readr)
 library(testthat)
 library(tidyverse)
@@ -17,7 +18,7 @@ library(tidyverse)
 
 #### merged_house_price testing ####
 test_that("merged_house_price testing", {
-  merged_house_price<- readr::read_csv("../../House_Price/outputs/data/merged_house_price.csv")
+  merged_house_price <- read_parquet("../../House_Price/outputs/data/merged_house_price.parquet")
   
   # Test if 'Year' values are positive
   expect_true(all(merged_house_price$Year > 0),
