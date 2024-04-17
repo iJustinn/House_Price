@@ -69,19 +69,21 @@ Following this introduction, @sec-data (Methodology), outlines key reasons of th
 
 # Data {#sec-data}
 
-Data used in this paper was cleaned, processed and tested with the programming language R [@citeR]. Also with support of additional packages in R: `tidyverse` [@citeTidyverse], `ggplot2` [@citeGgplot], `janitor` [@citeJanitor], `readr` [@citeReadr], `knitr` [@citeKnitr], `modelsummary` [@citeModelsummary], `testthat` [@citeTestthat], `KableExtra` [@citeKableEx], `viridis` [@citeViridis], `lubridate` [@citeLubridate], `maps` [@citeMaps], `mgcv` [@citeMgcv], `Arrow` [@citeArrow].
+Data used in this paper was cleaned, processed, modeled and tested with the programming language R [@citeR]. Also with support of additional packages in R: `tidyverse` [@citeTidyverse], `ggplot2` [@citeGgplot], `janitor` [@citeJanitor], `readr` [@citeReadr], `knitr` [@citeKnitr], `modelsummary` [@citeModelsummary], `testthat` [@citeTestthat], `KableExtra` [@citeKableEx], `viridis` [@citeViridis], `lubridate` [@citeLubridate], `maps` [@citeMaps], `mgcv` [@citeMgcv], `Arrow` [@citeArrow].
 
 ## Source
 
-Our study focuses on U.S. house price trends using the extensive datasets available from Zillow Research [@citeZillowdata]. This data repository provides a broad array of real estate statistics, capturing the dynamics of house prices across various regions in the United States. As a cornerstone of transparency and public engagement, Zillow Research offers open access to these vital real estate data, which are instrumental in understanding housing market behaviors.
-
-The dataset encompasses detailed information on house prices over several years, including breakdowns by state, city, and occasionally neighborhood levels, from median list prices to the Zillow Home Value Index (ZHVI). This level of detail facilitates a nuanced analysis of house price trends and the identification of significant market dynamics, which can guide potential real estate investments and policy formulations.
+Our study focuses on U.S. house price trends using the extensive datasets available from Zillow Research [@citeZillowdata]. This data repository provides a broad array of real estate statistics, capturing the dynamics of house prices across various regions in the United States. The dataset encompasses detailed information on house prices from 2000 to 2024, including breakdowns by state, city, and occasionally neighborhood levels, from median list prices to the Zillow Home Value Index (ZHVI). As a cornerstone of transparency and public engagement, Zillow Research offers open access to these vital real estate data, which are instrumental in understanding housing market behaviors.
 
 We selected this dataset for its reliability, depth, and alignment with our study’s objectives. As a trusted source in the real estate market, it provides accurate and timely data essential for our analysis. Its extensive geographic and property-specific details enable an in-depth examination of factors influencing house prices in the U.S. Furthermore, the dataset’s structure facilitates efficient analysis and modeling of real estate trends. More details about this dataset can be found in the datasheet in @sec-app (Appendix).
 
+## Measurement
+
+In this study, the conversion of real-world real estate transactions into quantifiable data entries is meticulously executed using Zillow's extensive datasets. Each real-world transaction is represented as a data point in our analysis, capturing essential attributes such as sale price, property location, and characteristics like the number of bedrooms and bathrooms. For example, a house sale in Miami with three bedrooms and two bathrooms, sold at a specific price, is recorded with precise values for each attribute, including the sale date. This method ensures that each entry in our dataset accurately reflects an actual event, maintaining the integrity and accuracy of the data. The rigorous methodology employed in documenting these transactions allows for precise, data-driven insights into market dynamics, providing a solid foundation for analyzing trends and drawing conclusions about factors influencing real estate prices.
+
 ## Method
 
-Our analysis began with the critical task of refining the raw dataset downloaded from Zillow. The initial phase involved understanding the dataset’s structure. As shown in @tbl-raw_data, this dataset typically includes multiple attributes such as Region ID, Region Type, location (states), year of transaction, house price, etc. Each record represents a unique property, providing a detailed snapshot of its characteristics.
+Our analysis began with the essential task of refining the raw dataset downloaded from Zillow. The original data was largely retained because it covers a time span that aligns well with the needs of this study. The initial phase involved understanding the dataset’s structure. As demonstrated in @tbl-raw_data, this dataset typically includes multiple attributes such as Region ID, Region Type, location (states), year of transaction, house price, etc. Each record represents a unique property, offering a detailed snapshot of its characteristics.
 
 ```{r}
 #| message: false
@@ -440,11 +442,11 @@ The heatmap for homes with five or more bedrooms, as depicted in @fig-hm_by_type
 
 ### Model Setup
 
-$$\text{Price} = \beta_0 + \beta_1 \times \text{Year} + \beta_2 \times \text{NumBedroom}$$
+$$\text{Price} = \beta_0 + \beta_1 \times \text{Year} + \beta_2 \times \text{NumBedroom} + \varepsilon$$
 
 The setup for the Multiple Regression model is straightforward, positing direct linear and additive relationships between the independent variables (Year and NumBedroom) and the dependent variable (house price). This model assumes that changes in the year and the number of bedrooms are directly proportional to changes in house prices, with each independent variable contributing additively to the predicted price.
 
-$$\text{Price} = \beta_0 + \beta_1 \times \text{Year} + \beta_2 \times \text{Year}^2 + \beta_3 \times \text{NumBedroom} + \beta_4 \times \text{NumBedroom}^2$$
+$$\text{Price} = \beta_0 + \beta_1 \times \text{Year} + \beta_2 \times \text{Year}^2 + \beta_3 \times \text{NumBedroom} + \beta_4 \times \text{NumBedroom}^2 + \varepsilon$$
 
 The Polynomial Regression model involves a more complex setup, incorporating polynomial transformations of the independent variables to accommodate non-linear trends in the data. Specifically, second-degree polynomial terms are introduced to model curvature, reflecting that the impacts of time and the number of bedrooms on house prices may vary at different rates. This approach recognizes that increases in house prices could either accelerate or decelerate over time, and that the price premium associated with additional bedrooms may not be constant, potentially increasing or decreasing with the number of bedrooms. This model thereby allows for a more nuanced understanding of how these variables interact to influence house prices.
 
@@ -492,13 +494,13 @@ modelsummary(
 
 ### Multiple Regression
 
-$$\text{Price} = -13,969,628.019 + 6,958.769 \times \text{Year} + 59,897.327 \times \text{NumBedroom}$$
+$$\hat{\text{Price}}  = -13,969,628.019 + 6,958.769 \times \text{Year} + 59,897.327 \times \text{NumBedroom}$$
 
 The Multiple Regression model provides some intriguing insights into the housing market. It reveals a substantial negative intercept, suggesting that starting from the model's baseline (possibly the earliest year in the dataset), house prices are initially low. The positive coefficient for 'Year' indicates a general trend of increasing house prices over time, with each passing year associated with an average increase in house price of \$6,958.769. Additionally, the 'NumBedroom' variable has a positive coefficient of \$59,897.327, indicating that houses with more bedrooms tend to command higher prices. This model explains 44.5% of the variability in house prices (R-squared = 0.445), which is respectable but also suggests that over half of the variance is due to factors not included in the model. This highlights the need to consider other variables or more complex models to better capture the dynamics affecting house prices.
 
 ### Polynomial Regression
 
-$$\text{Price} = 212,976.031 + 3,866,485.706 \times \text{Year} + 1,601,816.793 \times \text{Year}^2$$
+$$\hat{\text{Price}}  = 212,976.031 + 3,866,485.706 \times \text{Year} + 1,601,816.793 \times \text{Year}^2$$
 $$+ 6,591,537.312 \times \text{NumBedroom} + 1,365,656.076 \times \text{NumBedroom}^2$$
 
 The Polynomial Regression model reveals notable dynamics within the housing market with its considerably high positive intercept, suggesting that the baseline price for houses at the model's inception is substantial. The incorporation of polynomial terms for 'Year' and 'NumBedroom' illustrates a non-linear relationship between these variables and house prices. Specifically, the positive coefficients for the polynomial terms of 'Year' suggest an initial increase in prices. However, the lower magnitude of the coefficients for the quadratic terms might indicate a slowing growth rate or a potential future downturn in prices.
@@ -571,13 +573,13 @@ The choice between these models should be informed by the balance between the ne
 
 The consistent rise in housing prices documented in this research parallels global economic patterns observed across developed nations [@citeGlobalHP]. This upward trend is not an isolated phenomenon but part of a broader pattern evident across international borders, highlighting a confluence of macroeconomic and microeconomic factors. This research emphasizes the deep interconnection between the housing market and global economic conditions, illustrating the intrinsic relationship between real estate values and global economic health.
 
-The escalation in prices may coincide with inflationary trends affecting various economic sectors, suggesting that housing markets are susceptible to the impacts of global monetary policies and financial climates. These inflationary pressures can distort consumer purchasing power, creating a complex scenario where rising prices may not necessarily reflect actual increases in property value. The data also suggests that demographic shifts, particularly changes in family structures with more members per household, significantly influence demand and, consequently, prices in the housing market.
+The modeling efforts in this paper underscore the complexity of the housing market's response to economic forces and suggest that straightforward economic models might not always suffice in capturing the real-world dynamics of real estate pricing. The escalation in prices may coincide with inflationary trends affecting various economic sectors, suggesting that housing markets are susceptible to the impacts of global monetary policies and financial climates. These inflationary pressures can distort consumer purchasing power, creating a complex scenario where rising prices may not necessarily reflect actual increases in property value. The data also suggests that demographic shifts, particularly changes in family structures with more members per household, significantly influence demand and, consequently, prices in the housing market.
 
 Furthermore, the continued increase in house prices in the US has spurred an intriguing area of study. As other research indicates, the GDP of the US has not seen clear growth for an extended period [@citeUSGDP]. It would typically be assumed that without increased earnings, consumer purchasing would not rise; however, the rising house prices contradict this expectation. This discrepancy poses critical questions about the factors driving housing market dynamics, independent of direct economic growth.
 
 ## Potential Preference Shifts
 
-The increase in demand for larger homes, as indicated by the data, suggests a potential shift in housing preferences, possibly spurred by the recent pandemic, which emphasized the need for multifunctional living spaces that combine comfort with functionality. This shift reflects not only a preference for larger living spaces but also an adaptation to new realities—homes that can accommodate remote work, virtual schooling, and indoor recreation.
+The increase in demand for larger homes, as indicated in previous sections, suggests a potential shift in housing preferences, possibly spurred by the recent pandemic, which emphasized the need for multifunctional living spaces that combine comfort with functionality. This shift reflects not only a preference for larger living spaces but also an adaptation to new realities—homes that can accommodate remote work, virtual schooling, and indoor recreation.
 
 This evolving preference could have profound implications, affecting urban planning and infrastructure development. Urban areas, known for high-density living, may need to reconsider zoning laws and development guidelines to meet the growing demand for larger homes. This trend might also influence the architecture and design industries, inspiring innovations in home layouts, building materials, and community planning to cater to new living standards.
 
@@ -589,7 +591,7 @@ Economically, this trend could boost industries related to home construction, re
 
 The geographical analysis of housing price trends, illustrated through heat maps, reveals significant disparities across different regions, depicting an uneven economic landscape. Particularly, coastal regions display elevated housing prices, embodying the enduring principle in real estate that location is paramount. These regions, often centers of economic and cultural activity, have experienced increasing demand due to urban expansion and the attractive notion of coastal living. This demand, coupled with the inherently limited availability of land, leads to a competitive market with steadily rising prices.
 
-The insights derived from the geographical distribution of housing markets highlight opportunities for strategic infrastructural investments. Identifying areas with rapid price growth allows stakeholders to pinpoint locations primed for development or in need of policy adjustments to stabilize the market. Additionally, this data facilitates the targeted allocation of resources to underserved regions, promoting a more balanced economic distribution and enhancing overall economic equity.
+The insights derived from the geographical distribution of housing markets underscore opportunities for strategic infrastructural investments. The correct utilization of the Generalized Additive Model (GAM) was instrumental in identifying subtle patterns, such as the impact of microeconomic factors like local zoning laws or the availability of amenities on housing prices. Identifying areas with rapid price growth enables stakeholders to pinpoint locations primed for development or in need of policy adjustments to stabilize the market. Additionally, this data facilitates the targeted allocation of resources to underserved regions, promoting a more balanced economic distribution and enhancing overall economic equity.
 
 ## Possible Actions
 
