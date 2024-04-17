@@ -19,7 +19,7 @@ bibliography: references.bib
 #| echo: false
 
 # load packages
-packages <- c("tidyverse", "ggplot2", "janitor", "readr", "knitr", "modelsummary", "testthat", "kableExtra", "viridis", "lubridate", "maps", "mgcv")
+packages <- c("tidyverse", "ggplot2", "janitor", "readr", "knitr", "modelsummary", "testthat", "kableExtra", "viridis", "lubridate", "maps", "mgcv", "arrow")
 
 # Function to check and install missing packages
 install_and_load <- function(packages) {
@@ -41,7 +41,7 @@ install_and_load(packages)
 
 # read in data
 all_house_price <- read_csv("../../inputs/data/all_house_price.csv")
-house_prices <- read_csv("../../outputs/data/merged_house_price.csv")
+house_prices <- read_parquet("../../outputs/data/merged_house_price.parquet")
 
 state_house_price_by_year <- read_csv("../../outputs/data/state_house_price_by_year.csv")
 state_1b_house_price_by_year <- read_csv("../../outputs/data/state_1b_house_price_by_year.csv")
@@ -69,7 +69,7 @@ Following this introduction, @sec-data (Methodology), outlines key reasons of th
 
 # Data {#sec-data}
 
-Data used in this paper was cleaned, processed and tested with the programming language R [@citeR]. Also with support of additional packages in R: `tidyverse` [@citeTidyverse], `ggplot2` [@citeGgplot], `janitor` [@citeJanitor], `readr` [@citeReadr], `knitr` [@citeKnitr], `modelsummary` [@citeModelsummary], `testthat` [@citeTestthat], `KableExtra` [@citeKableEx], `viridis` [@citeViridis], `lubridate` [@citeLubridate], `maps` [@citeMaps], `mgcv` [@citeMgcv].
+Data used in this paper was cleaned, processed and tested with the programming language R [@citeR]. Also with support of additional packages in R: `tidyverse` [@citeTidyverse], `ggplot2` [@citeGgplot], `janitor` [@citeJanitor], `readr` [@citeReadr], `knitr` [@citeKnitr], `modelsummary` [@citeModelsummary], `testthat` [@citeTestthat], `KableExtra` [@citeKableEx], `viridis` [@citeViridis], `lubridate` [@citeLubridate], `maps` [@citeMaps], `mgcv` [@citeMgcv], `Arrow` [@citeArrow].
 
 ## Source
 
@@ -509,7 +509,7 @@ Similarly, the coefficients for 'NumBedroom' follow a pattern that hints at dimi
 
 $$\text{Intercept for GAM} = 212,976.031$$
 
-The results of the Generalized Additive Model (GAM) as presented in Table 6 show a significant positive intercept, mirroring the polynomial regression model, which suggests a high base price for houses at the outset of the analysis. The R-squared value of 0.506 represents an improvement over the linear models, explaining approximately 50.6% of the variability in house prices. This indicates the GAM's enhanced ability to capture the variance in house prices through its non-linear approach.
+The results of the Generalized Additive Model (GAM) as presented in @tbl-nonlinear_model_result show a significant positive intercept, mirroring the polynomial regression model, which suggests a high base price for houses at the outset of the analysis. The R-squared value of 0.506 represents an improvement over the linear models, explaining approximately 50.6% of the variability in house prices. This indicates the GAM's enhanced ability to capture the variance in house prices through its non-linear approach.
 
 The Akaike Information Criterion (AIC) and Bayesian Information Criterion (BIC) values for the GAM are slightly lower than those observed in the polynomial regression model, suggesting that the GAM provides a better model fit with less information loss. However, the marginal reduction in these values implies that while the GAM enhances the fit of the linear models, the improvement in terms of information criteria is not dramatically significant.
 
@@ -531,7 +531,9 @@ modelsummary(
 
 ```
 
-The two charts in @fig-GAM_fit each depict the smoothed relationship between the predictor and the response variable (house price), with a solid line representing the estimated function and dashed lines indicating the confidence intervals around the estimate.
+In @fig-GAM_fit, the numbers in the parentheses, such as 10.83 and 2.74, represent the smoothing parameters or effective degrees of freedom. These parameters control the flexibility of the spline, balancing the fit of the model against the risk of overfitting by adjusting the "wiggliness" of the curve. The values on the y-axis, which range from negative to positive, quantify the contribution of each smooth term to the predicted value of the response variable, such as house prices. For example, these y-axis values illustrate how changes in the year or the number of bedrooms influence the predicted house price, relative to a certain baseline.
+
+The solid line depicted in the plot is the estimated smooth curve, which shows the modeled relationship between the predictor and the response variable. The dashed lines surrounding the solid line typically represent confidence intervals, providing a range within which the true effect is likely to lie with a certain level of confidence. This visualization helps in understanding the certainty of the model predictions and the potential variability in the effect of each predictor on the response variable.
 
 The plot on the left illustrates the relationship between 'Year' and house prices, revealing a clear non-linear trend. The prices exhibit a cyclical pattern with a notable peak around 2006, followed by a sharp decline, which likely corresponds to the global financial crisis of 2008. After this trough, there is a recovery, with prices trending upwards again, but with indications of leveling off towards the end of the period. This pattern could signify a stabilization in the market or potentially the onset of another downturn.
 
