@@ -6,7 +6,7 @@ author:
 thanks: "Code and data are available at: https://github.com/iJustinn/House_Price.git"
 date: today
 date-format: long
-abstract: "This research examines the dynamics of the U.S. housing market, offering a detailed analysis of price trends across various states and types of housing, which have shown considerable increases in recent years. The study clarifies how factors such as location, property characteristics, and external economic influences impact house prices."
+abstract: "This research conducts a detailed analysis of U.S. residential real estate price trends over the past two decades, using data from Zillow to explore influences from geographic location, property characteristics, and economic indicators. By employing multiple regression models, polynomial regression, and Generalized Additive Models (GAM), the study identifies complex interactions that affect housing prices. It highlights a notable shift towards larger homes, potentially driven by changes in work and lifestyle patterns due to recent global events."
 format: pdf
 toc: true
 toc-depth: 3
